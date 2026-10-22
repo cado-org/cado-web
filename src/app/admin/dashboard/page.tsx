@@ -23,7 +23,7 @@ export default async function AdminDashboardPage() {
   let newEnquiries = 0;
   let recentEnquiries: Enquiry[] = [];
   let recentProducts: Product[] = [];
-  let isDbConnected = isSupabaseConfigured();
+  const isDbConnected = isSupabaseConfigured();
 
   if (isDbConnected) {
     const supabase = await createServerSupabaseClient();

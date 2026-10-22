@@ -1,14 +1,18 @@
 import { v2 as cloudinary } from "cloudinary";
 import { ENV, isCloudinaryConfigured } from "../env";
 
-if (isCloudinaryConfigured()) {
-  cloudinary.config({
-    cloud_name: ENV.CLOUDINARY_CLOUD_NAME,
-    api_key: ENV.CLOUDINARY_API_KEY,
-    api_secret: ENV.CLOUDINARY_API_SECRET,
-    secure: true,
-  });
+function ensureCloudinaryConfig() {
+  if (isCloudinaryConfigured()) {
+    cloudinary.config({
+      cloud_name: ENV.CLOUDINARY_CLOUD_NAME,
+      api_key: ENV.CLOUDINARY_API_KEY,
+      api_secret: ENV.CLOUDINARY_API_SECRET,
+      secure: true,
+    });
+  }
 }
+
+ensureCloudinaryConfig();
 
 export { cloudinary };
 
@@ -16,6 +20,7 @@ export async function uploadImageToCloudinary(
   fileBuffer: Buffer,
   folder: string = "cado-ecommerce"
 ): Promise<{ url: string; public_id: string } | null> {
+  ensureCloudinaryConfig();
   if (!isCloudinaryConfigured()) {
     console.warn("Cloudinary is not configured. Upload aborted.");
     return null;
