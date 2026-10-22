@@ -1,0 +1,52 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --brand-red: #D71920;
+    --brand-red-hover: #B5121B;
+    --brand-dark: #171717;
+    --brand-text: #191919;
+    --brand-text-muted: #6B7280;
+    --brand-bg-light: #F5F5F5;
+    --brand-border: #E5E7EB;
+    --brand-green: #25D366;
+    --brand-green-hover: #1EBE5D;
+  }
+
+  body {
+    color: var(--brand-text);
+    background-color: #FFFFFF;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+/* Custom utility colors matching the reference */
+.bg-brand-red {
+  background-color: #D71920;
+}
+.bg-brand-red-hover:hover {
+  background-color: #B5121B;
+}
+.text-brand-red {
+  color: #D71920;
+}
+.border-brand-red {
+  border-color: #D71920;
+}
+.bg-brand-dark {
+  background-color: #171717;
+}
+.bg-brand-light {
+  background-color: #F5F5F5;
+}
+.border-brand-gray {
+  border-color: #E5E7EB;
+}
+.bg-brand-green {
+  background-color: #25D366;
+}
+.hover\:bg-brand-green-dark:hover {
+  background-color: #1EBE5D;
+}

@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 50">
+      <rect width="160" height="50" fill="#ffffff"/>
+      <g transform="translate(10, 8)">
+        <path d="M10 28 L4 20 L6 12 L12 6 L18 4 L24 6 L28 12 L26 18 L20 16 L16 20 L20 26 L18 28 Z" fill="#D71920"/>
+        <text x="36" y="26" font-family="Arial, sans-serif" font-weight="900" font-size="24" fill="#D71920" letter-spacing="1">CADO</text>
+      </g>
+    </svg>
