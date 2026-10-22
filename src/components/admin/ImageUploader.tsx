@@ -13,6 +13,60 @@ interface ImageUploaderProps {
   helperText?: string;
 }
 
+async function optimizeImageForUpload(file: File): Promise<File | Blob> {
+  if (file.type === "image/svg+xml" || file.size <= 500 * 1024) {
+    return file;
+  }
+
+  return new Promise((resolve) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = new window.Image();
+      img.onload = () => {
+        const MAX_DIM = 1920;
+        let width = img.width;
+        let height = img.height;
+
+        if (width > MAX_DIM || height > MAX_DIM) {
+          if (width > height) {
+            height = Math.round((height * MAX_DIM) / width);
+            width = MAX_DIM;
+          } else {
+            width = Math.round((width * MAX_DIM) / height);
+            height = MAX_DIM;
+          }
+        }
+
+        const canvas = document.createElement("canvas");
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext("2d");
+        if (!ctx) return resolve(file);
+
+        ctx.drawImage(img, 0, 0, width, height);
+        canvas.toBlob(
+          (blob) => {
+            if (blob && blob.size < file.size) {
+              const optimizedFile = new File([blob], file.name.replace(/\.[^.]+$/, ".webp"), {
+                type: "image/webp",
+              });
+              resolve(optimizedFile);
+            } else {
+              resolve(file);
+            }
+          },
+          "image/webp",
+          0.85
+        );
+      };
+      img.onerror = () => resolve(file);
+      img.src = e.target?.result as string;
+    };
+    reader.onerror = () => resolve(file);
+    reader.readAsDataURL(file);
+  });
+}
+
 export function ImageUploader({
   value,
   onChange,
@@ -33,8 +87,9 @@ export function ImageUploader({
     setUploading(true);
 
     try {
+      const optimized = await optimizeImageForUpload(file);
       const formData = new FormData();
-      formData.append("file", file);
+      formData.append("file", optimized);
       formData.append("folder", folder);
 
       const res = await fetch("/api/cloudinary/upload", {
@@ -77,6 +132,7 @@ export function ImageUploader({
             src={value}
             alt="Uploaded preview"
             fill
+            unoptimized
             className="object-contain"
           />
           <button

@@ -16,7 +16,6 @@ import {
   ShieldCheck,
   Mail,
   Settings,
-  Users,
   ExternalLink,
   LogOut,
 } from "lucide-react";
@@ -37,12 +36,9 @@ export function AdminSidebar({ onCloseMobile }: AdminSidebarProps) {
     { label: "Brands", href: "/admin/brands", icon: Award },
     { label: "Enquiries", href: "/admin/enquiries", icon: MessageSquare },
     { label: "Hero Banners", href: "/admin/banners", icon: ImageIcon },
-    { label: "Homepage Sections", href: "/admin/homepage", icon: Sliders },
     { label: "Project Gallery", href: "/admin/projects", icon: FolderKanban },
-    { label: "Trust Indicators", href: "/admin/trust-indicators", icon: ShieldCheck },
     { label: "Newsletter Subscribers", href: "/admin/newsletter", icon: Mail },
     { label: "Website Settings", href: "/admin/settings", icon: Settings },
-    { label: "Admin Users", href: "/admin/users", icon: Users },
   ];
 
   return (

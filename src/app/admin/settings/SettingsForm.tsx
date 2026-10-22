@@ -2,7 +2,6 @@
 
 import React, { useState, useTransition } from "react";
 import { SiteSettings } from "@/types/database";
-import { ImageUploader } from "@/components/admin/ImageUploader";
 import { saveSiteSettings } from "./actions";
 import { CheckCircle2, AlertCircle, Loader2 } from "lucide-react";
 
@@ -191,28 +190,6 @@ export function SettingsForm({ initialSettings }: SettingsFormProps) {
         </div>
       </div>
 
-      {/* Brand Logos */}
-      <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-xs space-y-4">
-        <h3 className="text-sm font-bold uppercase tracking-wider text-gray-800">
-          Brand Logos (Cloudinary)
-        </h3>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-          <ImageUploader
-            label="Main Red Logo (Header)"
-            value={formData.main_logo_url}
-            onChange={(url) => setFormData({ ...formData, main_logo_url: url })}
-            folder="cado-branding"
-          />
-
-          <ImageUploader
-            label="White Logo (Dark Footer)"
-            value={formData.footer_logo_url}
-            onChange={(url) => setFormData({ ...formData, footer_logo_url: url })}
-            folder="cado-branding"
-          />
-        </div>
-      </div>
 
       {/* Announcement Bar Settings */}
       <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-xs space-y-4">

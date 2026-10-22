@@ -1,7 +1,9 @@
-import React from "react";
+"use client";
+
+import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { MapPin, Phone, Mail, MessageSquare } from "lucide-react";
+import { MapPin, Phone, Mail, MessageSquare, Plus, Minus } from "lucide-react";
 import { SiteSettings } from "@/types/database";
 
 interface FooterProps {
@@ -32,6 +34,42 @@ function YoutubeIcon(props: React.SVGProps<SVGSVGElement>) {
   );
 }
 
+/**
+ * Mobile: heading with + / - icon, links drop down on tap.
+ * md and up: normal always-open column, heading not clickable.
+ */
+function FooterAccordion({
+  title,
+  children,
+}: {
+  title: string;
+  children: React.ReactNode;
+}) {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <div className="border-b border-neutral-800 md:border-0">
+      <button
+        type="button"
+        onClick={() => setOpen((o) => !o)}
+        aria-expanded={open}
+        className="flex w-full items-center justify-between py-4 text-left md:py-0 md:mb-4 md:pointer-events-none md:cursor-default"
+      >
+        <h4 className="text-xs font-bold uppercase tracking-widest text-white">
+          {title}
+        </h4>
+        <span className="md:hidden text-gray-400">
+          {open ? <Minus className="w-4 h-4" /> : <Plus className="w-4 h-4" />}
+        </span>
+      </button>
+
+      <div className={`${open ? "block" : "hidden"} pb-4 md:block md:pb-0`}>
+        {children}
+      </div>
+    </div>
+  );
+}
+
 export function Footer({ settings }: FooterProps) {
   const companyName = settings?.company_name || "CADO Building Products";
   const phone = settings?.primary_phone || "+91 75929 58909";
@@ -47,16 +85,18 @@ export function Footer({ settings }: FooterProps) {
   return (
     <footer className="bg-[#171717] text-white pt-16 pb-8 border-t border-gray-800">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 pb-12 border-b border-neutral-800">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-2 md:gap-10 pb-12 border-b border-neutral-800">
           {/* 1. Brand Column */}
-          <div className="space-y-4">
-            <div className="relative h-11 w-44">
-              <Image
-                src={footerLogo}
-                alt={companyName}
-                fill
-                className="object-contain object-left"
-              />
+          <div className="space-y-4 pb-4 md:pb-0">
+            <div className="inline-block bg-white p-2.5 rounded-xl shadow-xs">
+              <div className="relative h-10 w-40">
+                <Image
+                  src="/cado-logo.png"
+                  alt={companyName}
+                  fill
+                  className="object-contain"
+                />
+              </div>
             </div>
             <p className="text-xs text-gray-400 leading-relaxed">
               The trusted destination for quality building products, fittings, construction chemicals and more.
@@ -102,10 +142,7 @@ export function Footer({ settings }: FooterProps) {
           </div>
 
           {/* 2. Shop Links */}
-          <div>
-            <h4 className="text-xs font-bold uppercase tracking-widest text-white mb-4">
-              Shop
-            </h4>
+          <FooterAccordion title="Shop">
             <ul className="space-y-2.5 text-xs text-gray-400">
               <li>
                 <Link href="/shop" className="hover:text-white transition">
@@ -133,13 +170,10 @@ export function Footer({ settings }: FooterProps) {
                 </Link>
               </li>
             </ul>
-          </div>
+          </FooterAccordion>
 
           {/* 3. Customer Support */}
-          <div>
-            <h4 className="text-xs font-bold uppercase tracking-widest text-white mb-4">
-              Customer Support
-            </h4>
+          <FooterAccordion title="Customer Support">
             <ul className="space-y-2.5 text-xs text-gray-400">
               <li>
                 <Link href="/contact" className="hover:text-white transition">
@@ -167,13 +201,10 @@ export function Footer({ settings }: FooterProps) {
                 </Link>
               </li>
             </ul>
-          </div>
+          </FooterAccordion>
 
           {/* 4. Company */}
-          <div>
-            <h4 className="text-xs font-bold uppercase tracking-widest text-white mb-4">
-              Company
-            </h4>
+          <FooterAccordion title="Company">
             <ul className="space-y-2.5 text-xs text-gray-400">
               <li>
                 <Link href="/about" className="hover:text-white transition">
@@ -201,10 +232,10 @@ export function Footer({ settings }: FooterProps) {
                 </Link>
               </li>
             </ul>
-          </div>
+          </FooterAccordion>
 
-          {/* 5. Get in Touch */}
-          <div className="space-y-3">
+          {/* 5. Get in Touch (always visible) */}
+          <div className="space-y-3 pt-4 md:pt-0">
             <h4 className="text-xs font-bold uppercase tracking-widest text-white mb-4">
               Get in Touch
             </h4>

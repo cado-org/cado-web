@@ -6,8 +6,8 @@ import {
   getBrands,
   getProducts,
 } from "@/lib/data";
-import { Filter, ArrowUpDown, Search, PackageOpen } from "lucide-react";
-import { ProductCard } from "@/components/products/ProductCard";
+import { Filter, ArrowUpDown, Search, PackageOpen, X } from "lucide-react";
+import { ProductCard, MobileFilters } from "@/components/products/ProductCard";
 
 interface ShopPageProps {
   searchParams: Promise<{
@@ -44,11 +44,19 @@ export default async function ShopPage({ searchParams }: ShopPageProps) {
 
   const totalPages = Math.ceil(count / limit);
 
+  // Active filter names (shown as removable chips on mobile)
+  const activeCategoryName = currentCategory
+    ? categories.find((c) => c.slug === currentCategory)?.name || currentCategory
+    : "";
+  const activeBrandName = currentBrand
+    ? brands.find((b) => b.slug === currentBrand)?.name || currentBrand
+    : "";
+
   return (
-    <div className="bg-[#F9FAFB] min-h-screen py-8">
+    <div className="bg-[#F9FAFB] min-h-screen py-4 sm:py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Breadcrumb */}
-        <nav className="text-xs text-gray-500 mb-6 flex items-center space-x-2">
+        <nav className="text-xs text-gray-500 mb-4 sm:mb-6 flex items-center space-x-2">
           <Link href="/" className="hover:text-[#D71920] transition">
             Home
           </Link>
@@ -57,8 +65,8 @@ export default async function ShopPage({ searchParams }: ShopPageProps) {
         </nav>
 
         {/* Page Header */}
-        <div className="bg-white border border-gray-200 rounded-xl p-6 mb-8 shadow-xs">
-          <h1 className="text-2xl sm:text-3xl font-black text-[#191919]">
+        <div className="bg-white border border-gray-200 rounded-xl p-4 sm:p-6 mb-5 sm:mb-8 shadow-xs">
+          <h1 className="text-xl sm:text-3xl font-black text-[#191919]">
             {currentCategory
               ? categories.find((c) => c.slug === currentCategory)?.name || "Products"
               : currentBrand
@@ -70,11 +78,11 @@ export default async function ShopPage({ searchParams }: ShopPageProps) {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-5 lg:gap-8">
           {/* Sidebar Filters */}
-          <aside className="lg:col-span-1 space-y-6">
+          <aside className="lg:col-span-1 space-y-4 lg:space-y-6">
             {/* Search within shop */}
-            <div className="bg-white p-5 rounded-xl border border-gray-200 shadow-xs">
+            <div className="bg-white p-4 sm:p-5 rounded-xl border border-gray-200 shadow-xs">
               <h2 className="text-xs font-bold uppercase tracking-wider text-gray-700 mb-3 flex items-center space-x-2">
                 <Search className="w-3.5 h-3.5" />
                 <span>Search Catalog</span>
@@ -105,8 +113,8 @@ export default async function ShopPage({ searchParams }: ShopPageProps) {
               </form>
             </div>
 
-            {/* Categories Filter */}
-            <div className="bg-white p-5 rounded-xl border border-gray-200 shadow-xs">
+            {/* Categories Filter (desktop only — mobile uses the Filters pop-up) */}
+            <div className="hidden lg:block bg-white p-5 rounded-xl border border-gray-200 shadow-xs">
               <div className="flex items-center justify-between mb-3">
                 <h2 className="text-xs font-bold uppercase tracking-wider text-gray-700 flex items-center space-x-2">
                   <Filter className="w-3.5 h-3.5" />
@@ -160,8 +168,8 @@ export default async function ShopPage({ searchParams }: ShopPageProps) {
               </div>
             </div>
 
-            {/* Brands Filter */}
-            <div className="bg-white p-5 rounded-xl border border-gray-200 shadow-xs">
+            {/* Brands Filter (desktop only — mobile uses the Filters pop-up) */}
+            <div className="hidden lg:block bg-white p-5 rounded-xl border border-gray-200 shadow-xs">
               <div className="flex items-center justify-between mb-3">
                 <h2 className="text-xs font-bold uppercase tracking-wider text-gray-700">
                   Brands
@@ -216,13 +224,23 @@ export default async function ShopPage({ searchParams }: ShopPageProps) {
           </aside>
 
           {/* Main Catalog View */}
-          <main className="lg:col-span-3 space-y-6">
-            {/* Top Toolbar: Result count + Sorting */}
-            <div className="bg-white border border-gray-200 rounded-xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs">
-              <p className="text-xs text-gray-500">
-                Showing <span className="font-bold text-gray-900">{products.length}</span> of{" "}
-                <span className="font-bold text-gray-900">{count}</span> products
-              </p>
+          <main className="lg:col-span-3 space-y-4 sm:space-y-6">
+            {/* Top Toolbar: Filters button (mobile) + Result count + Sorting */}
+            <div className="bg-white border border-gray-200 rounded-xl p-3 sm:p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs">
+              <div className="flex items-center justify-between gap-3">
+                <MobileFilters
+                  categories={categories}
+                  brands={brands}
+                  currentCategory={currentCategory}
+                  currentBrand={currentBrand}
+                  currentSort={currentSort}
+                  currentSearch={currentSearch}
+                />
+                <p className="text-xs text-gray-500">
+                  Showing <span className="font-bold text-gray-900">{products.length}</span> of{" "}
+                  <span className="font-bold text-gray-900">{count}</span> products
+                </p>
+              </div>
 
               <div className="flex items-center space-x-2 text-xs">
                 <ArrowUpDown className="w-3.5 h-3.5 text-gray-400" />
@@ -262,9 +280,41 @@ export default async function ShopPage({ searchParams }: ShopPageProps) {
               </div>
             </div>
 
+            {/* Active filter chips (mobile only) */}
+            {(currentCategory || currentBrand) && (
+              <div className="flex flex-wrap items-center gap-2 lg:hidden">
+                {currentCategory && (
+                  <Link
+                    href={`/shop?${new URLSearchParams({
+                      ...(currentBrand ? { brand: currentBrand } : {}),
+                      ...(currentSearch ? { q: currentSearch } : {}),
+                      ...(currentSort ? { sort: currentSort } : {}),
+                    }).toString()}`}
+                    className="inline-flex items-center gap-1 pl-3 pr-2 py-1 rounded-full bg-red-50 border border-red-200 text-[11px] font-semibold text-[#D71920]"
+                  >
+                    {activeCategoryName}
+                    <X className="w-3 h-3" />
+                  </Link>
+                )}
+                {currentBrand && (
+                  <Link
+                    href={`/shop?${new URLSearchParams({
+                      ...(currentCategory ? { category: currentCategory } : {}),
+                      ...(currentSearch ? { q: currentSearch } : {}),
+                      ...(currentSort ? { sort: currentSort } : {}),
+                    }).toString()}`}
+                    className="inline-flex items-center gap-1 pl-3 pr-2 py-1 rounded-full bg-red-50 border border-red-200 text-[11px] font-semibold text-[#D71920]"
+                  >
+                    {activeBrandName}
+                    <X className="w-3 h-3" />
+                  </Link>
+                )}
+              </div>
+            )}
+
             {/* Product Grid or Empty State */}
             {products.length === 0 ? (
-              <div className="bg-white rounded-xl border border-gray-200 p-16 text-center shadow-xs">
+              <div className="bg-white rounded-xl border border-gray-200 p-8 sm:p-16 text-center shadow-xs">
                 <div className="w-16 h-16 bg-gray-100 text-gray-400 rounded-full flex items-center justify-center mx-auto mb-4">
                   <PackageOpen className="w-8 h-8" />
                 </div>
@@ -284,7 +334,7 @@ export default async function ShopPage({ searchParams }: ShopPageProps) {
                 </div>
               </div>
             ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+              <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-5">
                 {products.map((product) => (
                   <ProductCard key={product.id} product={product} />
                 ))}
@@ -293,7 +343,7 @@ export default async function ShopPage({ searchParams }: ShopPageProps) {
 
             {/* Pagination */}
             {totalPages > 1 && (
-              <div className="flex items-center justify-center space-x-2 pt-6">
+              <div className="flex flex-wrap items-center justify-center gap-2 pt-4 sm:pt-6">
                 {Array.from({ length: totalPages }).map((_, i) => {
                   const pNum = i + 1;
                   return (

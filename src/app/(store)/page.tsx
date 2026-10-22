@@ -1,6 +1,5 @@
 import React from "react";
 import { HeroBanner } from "@/components/home/HeroBanner";
-import { TrustIndicators } from "@/components/home/TrustIndicators";
 import { CategorySection } from "@/components/home/CategorySection";
 import { BrandShowcase } from "@/components/home/BrandShowcase";
 import { FeaturedProducts } from "@/components/home/FeaturedProducts";
@@ -11,7 +10,6 @@ import { BrandPromise } from "@/components/home/BrandPromise";
 import { NewsletterStrip } from "@/components/home/NewsletterStrip";
 import {
   getHeroBanners,
-  getTrustIndicators,
   getCategories,
   getFeaturedProducts,
   getBrands,
@@ -22,7 +20,6 @@ import {
 export default async function HomePage() {
   const [
     banners,
-    trustIndicators,
     categories,
     featuredProducts,
     brands,
@@ -30,7 +27,6 @@ export default async function HomePage() {
     sections,
   ] = await Promise.all([
     getHeroBanners(),
-    getTrustIndicators(),
     getCategories(),
     getFeaturedProducts(),
     getBrands(),
@@ -42,13 +38,10 @@ export default async function HomePage() {
 
   return (
     <div className="flex flex-col">
-      {/* 1. Hero Section */}
-      <HeroBanner banner={activeBanner} />
+      {/* 1. Hero Section with embedded bottom trust indicators */}
+      <HeroBanner banner={activeBanner} banners={banners} />
 
-      {/* 2. Trust Indicators Row */}
-      <TrustIndicators indicators={trustIndicators} />
-
-      {/* 3. Shop by Category */}
+      {/* 2. Shop by Category */}
       <CategorySection categories={categories} />
 
       {/* 4. Our Own Brand CADO + WhatsApp Quote Panel */}

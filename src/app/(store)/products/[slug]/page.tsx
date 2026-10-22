@@ -158,9 +158,9 @@ export default async function ProductDetailPage({
                   </span>
                 </div>
                 <div>
-                  <span className="text-gray-400 block mb-0.5">Min Order Qty</span>
-                  <span className="font-bold text-gray-800">
-                    {product.min_order_quantity || 1} Unit(s)
+                  <span className="text-gray-400 block mb-0.5">Availability</span>
+                  <span className="font-bold text-green-700 capitalize">
+                    {product.availability_status ? product.availability_status.replace(/_/g, " ") : "In Stock"}
                   </span>
                 </div>
                 <div>

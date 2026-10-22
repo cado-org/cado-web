@@ -11,7 +11,7 @@ interface ProductDetailActionsProps {
 
 export function ProductDetailActions({ product }: ProductDetailActionsProps) {
   const { openEnquiryModal, addToCart } = useEnquiry();
-  const [qty, setQty] = useState(product.min_order_quantity || 1);
+  const [qty, setQty] = useState(1);
   const [added, setAdded] = useState(false);
 
   const handleAddToCart = () => {
@@ -27,7 +27,7 @@ export function ProductDetailActions({ product }: ProductDetailActionsProps) {
         <div className="flex items-center border border-gray-300 rounded-lg overflow-hidden bg-white">
           <button
             type="button"
-            onClick={() => setQty(Math.max((product.min_order_quantity || 1), qty - 1))}
+            onClick={() => setQty(Math.max(1, qty - 1))}
             className="w-9 h-9 flex items-center justify-center hover:bg-gray-100 transition text-gray-600"
             aria-label="Decrease quantity"
           >
