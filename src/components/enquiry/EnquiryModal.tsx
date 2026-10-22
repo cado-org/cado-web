@@ -29,7 +29,7 @@ export function EnquiryModal() {
     if (activeEnquiryProduct) {
       setFormData((prev) => ({
         ...prev,
-        requested_quantity: activeEnquiryProduct.min_order_quantity || 1,
+        requested_quantity: 1,
       }));
     }
     setErrorMessage("");
@@ -261,7 +261,7 @@ export function EnquiryModal() {
                   </label>
                   <input
                     type="number"
-                    min={activeEnquiryProduct?.min_order_quantity || 1}
+                    min={1}
                     required
                     value={formData.requested_quantity}
                     onChange={(e) =>

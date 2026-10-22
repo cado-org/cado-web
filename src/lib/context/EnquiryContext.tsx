@@ -78,7 +78,7 @@ export function EnquiryProvider({ children }: { children: React.ReactNode }) {
             name: product.name,
             sku: product.sku,
             packaging: product.packaging_details,
-            quantity: Math.max(quantity, product.min_order_quantity || 1),
+            quantity: Math.max(quantity, 1),
             image_url: product.main_image_url,
           },
         ];

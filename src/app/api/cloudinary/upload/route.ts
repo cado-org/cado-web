@@ -40,7 +40,7 @@ export async function POST(req: NextRequest) {
     const arrayBuffer = await file.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
 
-    const uploadResult = await uploadImageToCloudinary(buffer, folder);
+    const uploadResult = await uploadImageToCloudinary(buffer, folder, file.type);
 
     if (!uploadResult) {
       return NextResponse.json({ error: "Failed to upload to Cloudinary" }, { status: 500 });

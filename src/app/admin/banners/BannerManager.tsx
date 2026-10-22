@@ -252,14 +252,16 @@ export function BannerManager({ banners }: BannerManagerProps) {
               </div>
 
               <ImageUploader
-                label="Desktop Hero Image *"
+                label="Desktop Hero Banner (16:9 Ratio recommended) *"
+                helperText="16:9 landscape format (e.g. 1920x1080, max 8MB)"
                 value={formData.desktop_image_url}
                 onChange={(url) => setFormData({ ...formData, desktop_image_url: url })}
                 folder="cado-hero"
               />
 
               <ImageUploader
-                label="Mobile Hero Image (Optional)"
+                label="Mobile Hero Banner (9:16 Ratio recommended)"
+                helperText="9:16 portrait format for phones (e.g. 1080x1920, max 8MB)"
                 value={formData.mobile_image_url}
                 onChange={(url) => setFormData({ ...formData, mobile_image_url: url })}
                 folder="cado-hero"

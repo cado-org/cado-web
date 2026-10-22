@@ -34,68 +34,43 @@ export function BrandShowcase({ section }: BrandShowcaseProps) {
   const quoteCtaLabel = content.quote_cta_label || "GET A QUOTE ON WHATSAPP";
 
   return (
-    <section className="py-10 bg-[#F5F5F5]">
+    <section className="py-10 ">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
-          {/* Left Split: Dark Brand Editorial Banner */}
-          <div className="lg:col-span-8 bg-[#171717] rounded-xl p-8 sm:p-10 text-white relative overflow-hidden flex flex-col justify-between shadow-md">
-            {/* Dark background graphic */}
-            <div className="absolute inset-0 opacity-20 pointer-events-none">
+          {/* Left Split: CADO Brand Editorial Banner with CADO-Tile.png Background */}
+          <div className="lg:col-span-8  rounded-xl p-8 sm:p-10 relative overflow-hidden flex flex-col justify-between shadow-md min-h-[340px] border border-gray-200">
+            {/* Background Graphic: CADO-Tile.png */}
+            <div className="absolute inset-0 pointer-events-none">
               <Image
-                src="/images/hero/hero-tile-installation.svg"
-                alt="CADO Brand Background"
+                src="/CADO-Tile.png"
+                alt="CADO Tile Adhesives"
                 fill
-                className="object-cover"
+                priority
+                className="object-cover object-right md:object-center"
               />
+              {/* Soft left gradient so text is razor-sharp while products on right stay fully visible */}
+              <div className="absolute inset-0 " />
             </div>
 
-            <div className="relative z-10 max-w-md space-y-4">
-              <p className="text-xs font-bold uppercase tracking-widest text-red-500">
+            <div className="relative z-10 max-w-sm sm:max-w-md space-y-4 my-auto">
+              <p className="text-xs font-black uppercase tracking-widest text-[#D71920]">
                 Our Own Brand
               </p>
-              <h2 className="text-3xl sm:text-4xl font-black tracking-tight leading-tight">
+              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-[#191919] tracking-tight leading-tight">
                 CADO
               </h2>
-              <p className="text-xs sm:text-sm text-gray-300 leading-relaxed">
+              <p className="text-xs sm:text-sm text-gray-700 font-medium leading-relaxed">
                 {subheading}
               </p>
 
               <div className="pt-2">
                 <Link
                   href={ctaUrl}
-                  className="inline-flex items-center px-5 py-2.5 bg-[#D71920] hover:bg-[#B5121B] text-white text-xs font-bold uppercase tracking-wider rounded transition space-x-2"
+                  className="inline-flex items-center px-6 py-3 bg-[#D71920] hover:bg-[#B5121B] text-white text-xs font-bold uppercase tracking-wider rounded-md shadow-md transition-transform active:scale-95 space-x-2"
                 >
                   <span>{ctaLabel}</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
+                  <ArrowRight className="w-4 h-4 ml-1" />
                 </Link>
-              </div>
-            </div>
-
-            {/* Bags in bottom right */}
-            <div className="relative z-10 mt-6 sm:mt-0 sm:absolute sm:bottom-4 sm:right-6 flex items-end space-x-2">
-              <div className="w-24 sm:w-28 h-36 sm:h-44 relative">
-                <Image
-                  src="/images/products/cado-777.svg"
-                  alt="CADO 777"
-                  fill
-                  className="object-contain drop-shadow-xl"
-                />
-              </div>
-              <div className="w-24 sm:w-28 h-36 sm:h-44 relative -ml-4">
-                <Image
-                  src="/images/products/cado-666.svg"
-                  alt="CADO 666"
-                  fill
-                  className="object-contain drop-shadow-xl"
-                />
-              </div>
-              <div className="w-20 sm:w-24 h-32 sm:h-40 relative -ml-4">
-                <Image
-                  src="/images/products/cado-epoxy-grout.svg"
-                  alt="CADO Epoxy Grout"
-                  fill
-                  className="object-contain drop-shadow-xl"
-                />
               </div>
             </div>
           </div>

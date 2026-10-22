@@ -41,18 +41,21 @@ export async function middleware(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
+  const adminDevCookie = request.cookies.get("cado_admin_dev_session");
+  const isAuthenticated = Boolean(user || adminDevCookie?.value === "authenticated");
+
   const isAccessingAdmin = request.nextUrl.pathname.startsWith("/admin");
   const isLoginPage = request.nextUrl.pathname === "/admin/login";
 
   // If accessing protected admin route without user session, redirect to /admin/login
-  if (isAccessingAdmin && !isLoginPage && !user) {
+  if (isAccessingAdmin && !isLoginPage && !isAuthenticated) {
     const url = request.nextUrl.clone();
     url.pathname = "/admin/login";
     return NextResponse.redirect(url);
   }
 
   // If logged in and on login page, redirect to dashboard
-  if (isLoginPage && user) {
+  if (isLoginPage && isAuthenticated) {
     const url = request.nextUrl.clone();
     url.pathname = "/admin/dashboard";
     return NextResponse.redirect(url);

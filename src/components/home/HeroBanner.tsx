@@ -1,120 +1,220 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { MessageSquare, ArrowRight } from "lucide-react";
+import {
+  MessageSquare,
+  ArrowRight,
+  ShieldCheck,
+  Truck,
+  Headphones,
+  PackageCheck,
+} from "lucide-react";
 import { HeroBanner as HeroBannerType } from "@/types/database";
 import { useEnquiry } from "@/lib/context/EnquiryContext";
 
 interface HeroBannerProps {
   banner?: HeroBannerType | null;
+  banners?: HeroBannerType[];
 }
 
-export function HeroBanner({ banner }: HeroBannerProps) {
+const TRUST_ITEMS = [
+  {
+    icon: ShieldCheck,
+    title: "Trusted Quality",
+    subtitle: "Reliable products",
+  },
+  {
+    icon: Truck,
+    title: "Bulk Supply",
+    subtitle: "Best pricing",
+  },
+  {
+    icon: Headphones,
+    title: "Expert Support",
+    subtitle: "Instant quotes via WhatsApp",
+  },
+  {
+    icon: PackageCheck,
+    title: "Pan India Supply",
+    subtitle: "For industrial & real estate",
+  },
+];
+
+export function HeroBanner({ banner, banners = [] }: HeroBannerProps) {
   const { openEnquiryModal } = useEnquiry();
 
-  const eyebrow = banner?.eyebrow || "BUILD BETTER WITH CADO";
-  const title = banner?.title || "Premium Tile Adhesives for Stronger Spaces";
+  // Combine banner props into an array
+  const bannerList: HeroBannerType[] =
+    banners && banners.length > 0
+      ? banners
+      : banner
+      ? [banner]
+      : [
+          {
+            id: "default-banner",
+            title: "Premium Tile Adhesives for Stronger Spaces",
+            eyebrow: "BUILD BETTER WITH CADO",
+            description:
+              "High performance CADO tile adhesives designed for floor and wall applications. Reliable quality for homes, commercial and industrial projects.",
+            primary_cta_label: "Shop CADO Products",
+            primary_cta_url: "/shop?brand=cado",
+            desktop_image_url: "/images/hero/hero-tile-installation.svg",
+            mobile_image_url: "/images/hero/hero-tile-installation.svg",
+            is_active: true,
+            display_order: 1,
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString(),
+          } as unknown as HeroBannerType,
+        ];
+
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  // Auto-advance banner slides every 5 seconds if more than 1 banner
+  useEffect(() => {
+    if (bannerList.length <= 1) return;
+    const interval = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % bannerList.length);
+    }, 5000);
+    return () => clearInterval(interval);
+  }, [bannerList.length]);
+
+  const activeBanner = bannerList[currentIndex] || bannerList[0];
+
+  const eyebrow = activeBanner?.eyebrow || "BUILD BETTER WITH CADO";
+  const title =
+    activeBanner?.title || "Premium Tile Adhesives for Stronger Spaces";
   const description =
-    banner?.description ||
-    "High-performance CADO tile adhesives designed for floor and wall applications. Reliable quality for homes, commercial and industrial projects.";
-  const primaryCtaLabel = banner?.primary_cta_label || "Shop CADO Products";
-  const primaryCtaUrl = banner?.primary_cta_url || "/shop?brand=cado";
+    activeBanner?.description ||
+    "High performance CADO tile adhesives designed for floor and wall applications. Reliable quality for homes, commercial and industrial projects.";
+  const primaryCtaLabel =
+    activeBanner?.primary_cta_label || "Shop CADO Products";
+  const primaryCtaUrl =
+    activeBanner?.primary_cta_url || "/shop?brand=cado";
+
+  const desktopImage =
+    activeBanner?.desktop_image_url ||
+    (activeBanner as any)?.image_url ||
+    "/images/hero/hero-tile-installation.svg";
+  const mobileImage = activeBanner?.mobile_image_url || desktopImage;
 
   return (
-    <section className="relative bg-[#1A1A1A] text-white overflow-hidden min-h-[520px] lg:min-h-[580px] flex items-center">
-      {/* Background Graphic Pattern */}
-      <div className="absolute inset-0 z-0 opacity-25">
-        <Image
-          src="/images/hero/hero-tile-installation.svg"
-          alt="CADO Tile Installation"
-          fill
-          priority
-          className="object-cover object-center"
-        />
+    <section className="relative w-full aspect-[9/16] sm:aspect-[4/3] md:aspect-[16/9] min-h-[520px] md:min-h-[580px] max-h-[85vh] bg-[#F5F5F7] overflow-hidden flex flex-col justify-end">
+      {/* Background Banner Image (Clean - NO dark/black fade overlay) */}
+      <div className="absolute inset-0 z-0">
+        {/* Desktop 16:9 Banner */}
+        <div className="relative w-full h-full hidden md:block">
+          <Image
+            src={desktopImage}
+            alt={title}
+            fill
+            priority
+            unoptimized
+            className="object-cover object-center transition-opacity duration-500"
+          />
+        </div>
+
+        {/* Mobile 9:16 Banner */}
+        <div className="relative w-full h-full block md:hidden">
+          <Image
+            src={mobileImage}
+            alt={title}
+            fill
+            priority
+            unoptimized
+            className="object-cover object-center transition-opacity duration-500"
+          />
+        </div>
       </div>
 
-      {/* Dark gradient overlay */}
-      <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/70 to-black/40 z-1" />
-
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 w-full">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-          {/* Left Text Content */}
-          <div className="lg:col-span-7 space-y-6">
-            <div className="inline-block">
-              <span className="text-[#D71920] font-black text-xs sm:text-sm tracking-widest uppercase bg-white/10 px-3 py-1 rounded">
-                {eyebrow}
-              </span>
-            </div>
-
-            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-5xl font-black text-white leading-tight tracking-tight">
-              {title}
-            </h1>
-
-            <p className="text-gray-300 text-sm sm:text-base leading-relaxed max-w-xl">
-              {description}
-            </p>
-
-            {/* CTAs */}
-            <div className="flex flex-wrap items-center gap-4 pt-2">
-              <Link
-                href={primaryCtaUrl}
-                className="inline-flex items-center justify-center px-6 py-3.5 bg-[#D71920] hover:bg-[#B5121B] text-white text-sm font-bold rounded-md shadow-lg transition-transform active:scale-95 space-x-2"
-              >
-                <span>{primaryCtaLabel}</span>
-                <ArrowRight className="w-4 h-4" />
-              </Link>
-
-              <button
-                type="button"
-                onClick={() => openEnquiryModal(null)}
-                className="inline-flex items-center justify-center px-6 py-3.5 bg-white hover:bg-gray-100 text-[#191919] text-sm font-bold rounded-md shadow-lg transition space-x-2 cursor-pointer"
-              >
-                <MessageSquare className="w-4 h-4 text-[#25D366]" />
-                <span>Enquire on WhatsApp</span>
-              </button>
-            </div>
+      {/* Content Container (Mobile: Bottom Left, Desktop: Content center + Trust Indicators at bottom) */}
+      <div className="relative z-10 max-w-7xl mx-auto px-5 sm:px-6 lg:px-8 pt-4 md:pt-14 pb-6 md:pb-6 w-full flex flex-col justify-end md:justify-between h-full pointer-events-none">
+        <div className="max-w-xl lg:max-w-2xl space-y-3 md:space-y-5 text-left pointer-events-auto mt-auto md:mt-0 md:my-auto">
+          {/* Eyebrow */}
+          <div>
+            <span className="text-[#D71920] font-black text-xs sm:text-sm tracking-widest uppercase">
+              {eyebrow}
+            </span>
           </div>
 
-          {/* Right Product Showcase (CADO 777 & 666 Packaging) */}
-          <div className="lg:col-span-5 relative flex items-center justify-center pt-6 lg:pt-0">
-            {/* Script Slogan in the top right */}
-            <div className="absolute -top-6 right-2 z-20 text-right hidden sm:block">
-              <p
-                className="text-white/90 text-2xl font-bold italic tracking-wide"
-                style={{ fontFamily: "'Brush Script MT', cursive, sans-serif" }}
-              >
-                Strong Bonds <br />
-                <span className="text-white/80">Lasting Spaces</span>
-              </p>
-            </div>
+          {/* Heading */}
+          <h1 className="text-2xl sm:text-3xl md:text-5xl font-black text-[#191919] leading-tight tracking-tight drop-shadow-xs">
+            {title}
+          </h1>
 
-            {/* Packaging Bags Composition */}
-            <div className="relative flex items-end justify-center space-x-2 sm:space-x-4">
-              {/* Green 777 Bag */}
-              <div className="w-40 sm:w-48 lg:w-52 h-64 sm:h-76 relative transition-transform hover:scale-105 duration-200">
-                <Image
-                  src="/images/products/cado-777.svg"
-                  alt="CADO Tile Adhesive 777"
-                  fill
-                  priority
-                  className="object-contain drop-shadow-2xl"
-                />
-              </div>
+          {/* Description */}
+          <p className="text-gray-700 text-xs sm:text-base leading-relaxed max-w-xl font-normal drop-shadow-xs line-clamp-3 md:line-clamp-none">
+            {description}
+          </p>
 
-              {/* Red 666 Bag */}
-              <div className="w-40 sm:w-48 lg:w-52 h-64 sm:h-76 relative -ml-6 sm:-ml-8 transition-transform hover:scale-105 duration-200">
-                <Image
-                  src="/images/products/cado-666.svg"
-                  alt="CADO Tile Adhesive 666"
-                  fill
-                  priority
-                  className="object-contain drop-shadow-2xl"
-                />
-              </div>
-            </div>
+          {/* Action CTAs */}
+          <div className="flex flex-wrap items-center gap-3 md:gap-4 pt-1">
+            <Link
+              href={primaryCtaUrl}
+              className="inline-flex items-center justify-center px-5 py-2.5 md:px-6 md:py-3.5 bg-[#D71920] hover:bg-[#B5121B] text-white text-xs sm:text-sm font-bold rounded-md shadow-md transition-transform active:scale-95 space-x-2"
+            >
+              <span>{primaryCtaLabel}</span>
+              <ArrowRight className="w-4 h-4 ml-1" />
+            </Link>
+
+            <button
+              type="button"
+              onClick={() => openEnquiryModal(null)}
+              className="inline-flex items-center justify-center px-5 py-2.5 md:px-6 md:py-3.5 bg-white hover:bg-gray-50 border border-gray-300 text-[#191919] text-xs sm:text-sm font-bold rounded-md shadow-sm transition space-x-2 cursor-pointer active:scale-95"
+            >
+              <MessageSquare className="w-4 h-4 text-[#25D366] fill-[#25D366]" />
+              <span>Enquire on WhatsApp</span>
+            </button>
           </div>
+        </div>
+
+        {/* Desktop Bottom Strip: 4 Trust Indicators (Left to Center) + Slide Dots (Right) */}
+        {/* Hidden on mobile screen as requested */}
+        <div className="hidden md:flex items-center justify-between pt-6 mt-8 border-t border-black/10 w-full pointer-events-auto">
+          {/* Trust Indicators: Left to Center */}
+          <div className="flex items-center flex-wrap gap-4 lg:gap-8">
+            {TRUST_ITEMS.map((item, idx) => {
+              const Icon = item.icon;
+              return (
+                <div key={idx} className="flex items-center space-x-2.5">
+                  <div className="w-7 h-7 rounded-full bg-red-50 text-[#D71920] flex items-center justify-center shrink-0 border border-red-100">
+                    <Icon className="w-4 h-4 stroke-[2.2]" />
+                  </div>
+                  <div>
+                    <h4 className="text-xs font-black text-[#191919] leading-tight">
+                      {item.title}
+                    </h4>
+                    <p className="text-[11px] text-gray-500 font-medium leading-tight mt-0.5">
+                      {item.subtitle}
+                    </p>
+                  </div>
+                  {idx < TRUST_ITEMS.length - 1 && (
+                    <span className="h-5 w-px bg-gray-300 ml-4 hidden xl:block" />
+                  )}
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Slide Dots on the Right */}
+          {bannerList.length > 1 && (
+            <div className="flex items-center space-x-2 shrink-0 ml-4">
+              {bannerList.map((_, dotIdx) => (
+                <button
+                  key={dotIdx}
+                  type="button"
+                  onClick={() => setCurrentIndex(dotIdx)}
+                  className={`h-2.5 rounded-full transition-all duration-300 cursor-pointer ${
+                    currentIndex === dotIdx
+                      ? "w-7 bg-[#D71920]"
+                      : "w-2.5 bg-gray-300 hover:bg-gray-400"
+                  }`}
+                  aria-label={`Slide ${dotIdx + 1}`}
+                />
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </section>
