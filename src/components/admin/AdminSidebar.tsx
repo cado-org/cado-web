@@ -2,7 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   LayoutDashboard,
   Package,
@@ -27,6 +27,7 @@ interface AdminSidebarProps {
 
 export function AdminSidebar({ onCloseMobile }: AdminSidebarProps) {
   const pathname = usePathname();
+  const router = useRouter();
 
   const navItems = [
     { label: "Dashboard", href: "/admin/dashboard", icon: LayoutDashboard },
@@ -95,13 +96,25 @@ export function AdminSidebar({ onCloseMobile }: AdminSidebarProps) {
           </span>
         </Link>
 
-        <Link
-          href="/admin/login"
-          className="flex items-center space-x-2 px-3 py-2 text-xs font-semibold text-red-400 hover:text-red-300 hover:bg-neutral-800 rounded-lg transition"
+        <button
+          type="button"
+          onClick={async () => {
+            document.cookie = "cado_admin_dev_session=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+            try {
+              const { createClient } = await import("@/lib/supabase/client");
+              const supabase = createClient();
+              if (supabase) await supabase.auth.signOut();
+            } catch {
+              // ignore
+            }
+            router.push("/admin/login");
+            router.refresh();
+          }}
+          className="w-full flex items-center space-x-2 px-3 py-2 text-xs font-semibold text-red-400 hover:text-red-300 hover:bg-neutral-800 rounded-lg transition"
         >
           <LogOut className="w-4 h-4" />
-          <span>Admin Login / Sign Out</span>
-        </Link>
+          <span>Sign Out</span>
+        </button>
       </div>
     </aside>
   );
