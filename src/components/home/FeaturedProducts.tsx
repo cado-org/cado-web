@@ -37,7 +37,7 @@ export function FeaturedProducts({ products = [] }: FeaturedProductsProps) {
             </p>
           </div>
           <Link
-            href="/shop?brand=cado"
+            href="/brands/cado"
             className="inline-flex items-center text-xs sm:text-sm font-bold text-[#D71920] hover:text-[#B5121B] transition group"
           >
             <span>View All CADO Products</span>
@@ -63,7 +63,7 @@ export function FeaturedProducts({ products = [] }: FeaturedProductsProps) {
                 className="bg-white border border-gray-200/90 rounded-2xl p-5 sm:p-6 flex flex-col sm:flex-row items-center sm:items-stretch gap-6 hover:shadow-lg transition-shadow duration-200"
               >
                 {/* Left: Product Image */}
-                <div className="relative w-44 sm:w-48 h-56 sm:h-64 shrink-0 bg-[#F8FAFC] rounded-xl overflow-hidden p-3 flex items-center justify-center">
+                <div className="relative w-44 sm:w-48 h-56 sm:h-64 shrink-0  rounded-xl overflow-hidden p-3 flex items-center justify-center">
                   {product.main_image_url ? (
                     <Image
                       src={product.main_image_url}

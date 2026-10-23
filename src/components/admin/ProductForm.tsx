@@ -407,29 +407,39 @@ export function ProductForm({ initialData, categories, brands }: ProductFormProp
         </div>
 
         {/* Toggles */}
-        <div className="pt-4 border-t border-gray-100 flex flex-wrap gap-6 text-xs">
-          <label className="flex items-center space-x-2 cursor-pointer font-semibold text-gray-800">
+        <div className="pt-4 border-t border-gray-100 grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+          <label className="flex items-start space-x-3 cursor-pointer p-3.5 rounded-lg border border-red-200 bg-red-50/40 hover:bg-red-50/70 transition">
             <input
               type="checkbox"
               checked={formData.is_featured}
               onChange={(e) =>
                 setFormData({ ...formData, is_featured: e.target.checked })
               }
-              className="w-4 h-4 text-[#D71920] rounded border-gray-300 focus:ring-[#D71920]"
+              className="w-4 h-4 mt-0.5 text-[#D71920] rounded border-gray-300 focus:ring-[#D71920]"
             />
-            <span>Mark as Featured Product</span>
+            <div>
+              <span className="font-bold text-gray-900 block">Featured Product</span>
+              <span className="text-[11px] text-gray-600 font-normal leading-relaxed block mt-0.5">
+                Displays in the &quot;Featured CADO Products&quot; section on the homepage (the first 2 active featured products are showcased).
+              </span>
+            </div>
           </label>
 
-          <label className="flex items-center space-x-2 cursor-pointer font-semibold text-gray-800">
+          <label className="flex items-start space-x-3 cursor-pointer p-3.5 rounded-lg border border-gray-200 bg-gray-50/50 hover:bg-gray-50 transition">
             <input
               type="checkbox"
               checked={formData.is_active}
               onChange={(e) =>
                 setFormData({ ...formData, is_active: e.target.checked })
               }
-              className="w-4 h-4 text-[#D71920] rounded border-gray-300 focus:ring-[#D71920]"
+              className="w-4 h-4 mt-0.5 text-[#D71920] rounded border-gray-300 focus:ring-[#D71920]"
             />
-            <span>Active &amp; Visible on Public Website</span>
+            <div>
+              <span className="font-bold text-gray-900 block">Active Status</span>
+              <span className="text-[11px] text-gray-600 font-normal leading-relaxed block mt-0.5">
+                Product is active and publicly visible in the shop catalog and brand filters.
+              </span>
+            </div>
           </label>
         </div>
       </div>

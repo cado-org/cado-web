@@ -23,18 +23,33 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     getProjects(),
   ]);
 
-  const categoryRoutes: MetadataRoute.Sitemap = categories.map((c) => ({
-    url: `${baseUrl}/categories/${c.slug}`,
-    lastModified: new Date(c.updated_at || Date.now()),
-    changeFrequency: "weekly",
-    priority: 0.8,
-  }));
+  // Clean canonical category and subcategory routes under /shop/
+  const categoryRoutes: MetadataRoute.Sitemap = [];
+  categories.forEach((c) => {
+    categoryRoutes.push({
+      url: `${baseUrl}/shop/${c.slug}`,
+      lastModified: new Date(c.updated_at || Date.now()),
+      changeFrequency: "weekly",
+      priority: 0.85,
+    });
+
+    if (c.subcategories && c.subcategories.length > 0) {
+      c.subcategories.forEach((sub) => {
+        categoryRoutes.push({
+          url: `${baseUrl}/shop/${c.slug}/${sub.slug}`,
+          lastModified: new Date(sub.updated_at || c.updated_at || Date.now()),
+          changeFrequency: "weekly",
+          priority: 0.8,
+        });
+      });
+    }
+  });
 
   const brandRoutes: MetadataRoute.Sitemap = brands.map((b) => ({
     url: `${baseUrl}/brands/${b.slug}`,
     lastModified: new Date(b.updated_at || Date.now()),
     changeFrequency: "weekly",
-    priority: 0.7,
+    priority: 0.75,
   }));
 
   const productRoutes: MetadataRoute.Sitemap = products.map((p) => ({

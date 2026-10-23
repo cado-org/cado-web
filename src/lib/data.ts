@@ -214,15 +214,23 @@ export async function getProducts(options?: {
   if (!supabase) return { products: [], count: 0 };
 
   try {
+    const catRel = options?.categorySlug ? "category:categories!inner(*)" : "category:categories(*)";
+    const subRel = options?.subcategorySlug ? "subcategory:subcategories!inner(*)" : "subcategory:subcategories(*)";
+    const brandRel = options?.brandSlug ? "brand:brands!inner(*)" : "brand:brands(*)";
+
     let query = supabase
       .from("products")
-      .select("*, category:categories(*), subcategory:subcategories(*), brand:brands(*)", {
+      .select(`*, ${catRel}, ${subRel}, ${brandRel}`, {
         count: "exact",
       })
       .eq("is_active", true);
 
     if (options?.categorySlug) {
       query = query.eq("category.slug", options.categorySlug);
+    }
+
+    if (options?.subcategorySlug) {
+      query = query.eq("subcategory.slug", options.subcategorySlug);
     }
 
     if (options?.brandSlug) {

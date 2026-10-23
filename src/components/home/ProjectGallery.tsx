@@ -68,7 +68,7 @@ export function ProjectGallery({ projects = [] }: ProjectGalleryProps) {
   };
 
   return (
-    <section className="py-12 md:py-16 bg-[#F8FAFC]">
+    <section className="py-12 md:py-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-6 md:mb-8 gap-3">

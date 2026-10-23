@@ -64,19 +64,22 @@ export default function AdminLoginPage() {
 
   return (
     <div className="fixed inset-0 z-50 bg-[#171717] flex items-center justify-center p-4">
-      <div className="w-full max-w-md bg-white rounded-2xl shadow-2xl overflow-hidden border border-gray-200 animate-in fade-in zoom-in-95 duration-200">
-        {/* Header */}
-        <div className="bg-[#D71920] p-6 text-white text-center">
-          <div className="relative h-10 w-36 mx-auto mb-2">
-            <Image
-              src="/images/cado-logo-white.svg"
-              alt="CADO"
-              fill
-              className="object-contain"
-            />
+      <div className="w-full max-w-md bg-white rounded-2xl shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+        {/* Header: Black background with real CADO logo */}
+        <div className="bg-[#ffffff] p-6 text-black text-center ">
+          <div className="inline-block  px-3.5 py-2  mx-auto mb-3">
+            <div className="relative h-9 w-36">
+              <Image
+                src="/cado-logo.png"
+                alt="CADO"
+                fill
+                priority
+                className="object-contain"
+              />
+            </div>
           </div>
-          <h2 className="text-lg font-black tracking-tight">Admin Portal</h2>
-          <p className="text-xs text-white/80 mt-1">
+          <h2 className="text-lg font-black tracking-tight text-black">Admin Portal</h2>
+          <p className="text-xs text-gray-400 mt-1">
             Authorized management access for CADO operations
           </p>
         </div>

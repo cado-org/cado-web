@@ -14,7 +14,6 @@ export function EnquiryModal() {
     customer_email: "",
     company_name: "",
     location: "",
-    requested_quantity: 1,
     additional_requirements: "",
   });
 
@@ -26,12 +25,6 @@ export function EnquiryModal() {
   } | null>(null);
 
   useEffect(() => {
-    if (activeEnquiryProduct) {
-      setFormData((prev) => ({
-        ...prev,
-        requested_quantity: 1,
-      }));
-    }
     setErrorMessage("");
     setSuccessData(null);
   }, [activeEnquiryProduct, isModalOpen]);
@@ -51,7 +44,7 @@ export function EnquiryModal() {
               product_id: activeEnquiryProduct.id,
               product_name: activeEnquiryProduct.name,
               product_sku: activeEnquiryProduct.sku,
-              requested_quantity: Number(formData.requested_quantity) || 1,
+              requested_quantity: 1,
               packaging: activeEnquiryProduct.packaging_details,
             },
           ]
@@ -202,7 +195,7 @@ export function EnquiryModal() {
                     onChange={(e) =>
                       setFormData({ ...formData, customer_name: e.target.value })
                     }
-                    placeholder="e.g. Rahul Sharma"
+                    placeholder="Enter your name"
                     className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:border-[#D71920]"
                   />
                 </div>
@@ -217,7 +210,7 @@ export function EnquiryModal() {
                     onChange={(e) =>
                       setFormData({ ...formData, customer_phone: e.target.value })
                     }
-                    placeholder="e.g. 9876543210"
+                    placeholder="Enter mobile number"
                     className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:border-[#D71920]"
                   />
                 </div>
@@ -234,7 +227,7 @@ export function EnquiryModal() {
                     onChange={(e) =>
                       setFormData({ ...formData, customer_email: e.target.value })
                     }
-                    placeholder="name@company.com"
+                    placeholder="Enter email address"
                     className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:border-[#D71920]"
                   />
                 </div>
@@ -248,46 +241,26 @@ export function EnquiryModal() {
                     onChange={(e) =>
                       setFormData({ ...formData, company_name: e.target.value })
                     }
-                    placeholder="e.g. Apex Builders"
+                    placeholder="Enter company name"
                     className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:border-[#D71920]"
                   />
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-xs font-bold text-gray-700 uppercase mb-1">
-                    Requested Quantity <span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    type="number"
-                    min={1}
-                    required
-                    value={formData.requested_quantity}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        requested_quantity: parseInt(e.target.value) || 1,
-                      })
-                    }
-                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:border-[#D71920]"
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs font-bold text-gray-700 uppercase mb-1">
-                    Delivery City / Location <span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    value={formData.location}
-                    onChange={(e) =>
-                      setFormData({ ...formData, location: e.target.value })
-                    }
-                    placeholder="e.g. Calicut / Kochi"
-                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:border-[#D71920]"
-                  />
-                </div>
+              <div>
+                <label className="block text-xs font-bold text-gray-700 uppercase mb-1">
+                  Delivery City / Location <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={formData.location}
+                  onChange={(e) =>
+                    setFormData({ ...formData, location: e.target.value })
+                  }
+                  placeholder="Enter delivery city or location"
+                  className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:border-[#D71920]"
+                />
               </div>
 
               <div>
@@ -303,7 +276,7 @@ export function EnquiryModal() {
                       additional_requirements: e.target.value,
                     })
                   }
-                  placeholder="Need floor adhesive for vitrified tiles, estimated delivery timeframe, etc."
+                  placeholder="Enter any additional requirements, notes, or delivery timeframe..."
                   className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:border-[#D71920]"
                 />
               </div>

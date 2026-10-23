@@ -2,6 +2,7 @@ import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
+import type { Metadata } from "next";
 import { getProductBySlug, getProducts } from "@/lib/data";
 import { ProductCard } from "@/components/products/ProductCard";
 import { ProductDetailActions } from "@/components/products/ProductDetailActions";
@@ -13,9 +14,48 @@ import {
   Layers,
   Building2,
 } from "lucide-react";
+import { ENV } from "@/lib/env";
 
 interface ProductDetailPageProps {
   params: Promise<{ slug: string }>;
+}
+
+export async function generateMetadata({
+  params,
+}: ProductDetailPageProps): Promise<Metadata> {
+  const { slug } = await params;
+  const product = await getProductBySlug(slug);
+  const baseUrl = ENV.SITE_URL || "https://cado.in";
+  const canonicalUrl = `${baseUrl}/products/${slug}`;
+
+  if (!product) {
+    return {
+      title: "Product Not Found | CADO Building Materials",
+    };
+  }
+
+  const title = `${product.name} | CADO Building Materials`;
+  const description =
+    product.description ||
+    `Order genuine ${product.name} from CADO. High-performance building chemicals, adhesives, and bulk construction supplies.`;
+
+  return {
+    title,
+    description,
+    alternates: {
+      canonical: canonicalUrl,
+    },
+    openGraph: {
+      title,
+      description,
+      url: canonicalUrl,
+      siteName: "CADO Building Materials",
+      type: "website",
+      images: product.main_image_url
+        ? [{ url: product.main_image_url, alt: product.name }]
+        : undefined,
+    },
+  };
 }
 
 export default async function ProductDetailPage({
@@ -52,10 +92,21 @@ export default async function ProductDetailPage({
             <>
               <span>/</span>
               <Link
-                href={`/categories/${product.category.slug}`}
+                href={`/shop/${product.category.slug}`}
                 className="hover:text-[#D71920] transition"
               >
                 {product.category.name}
+              </Link>
+            </>
+          )}
+          {product.category && product.subcategory && (
+            <>
+              <span>/</span>
+              <Link
+                href={`/shop/${product.category.slug}/${product.subcategory.slug}`}
+                className="hover:text-[#D71920] transition"
+              >
+                {product.subcategory.name}
               </Link>
             </>
           )}
@@ -70,7 +121,7 @@ export default async function ProductDetailPage({
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
             {/* Left: Product Images Gallery */}
             <div className="lg:col-span-5 space-y-4">
-              <div className="relative w-full aspect-square bg-[#F8FAFC] border border-gray-200 rounded-xl overflow-hidden p-6 flex items-center justify-center">
+              <div className="relative w-full aspect-square rounded-xl overflow-hidden p-6 flex items-center justify-center">
                 {product.main_image_url ? (
                   <Image
                     src={product.main_image_url}

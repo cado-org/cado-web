@@ -51,7 +51,7 @@ export default async function HomePage() {
       <FeaturedProducts products={featuredProducts} />
 
       {/* 6. Trusted Brands Under One Roof */}
-      <TrustedBrands brands={brands} />
+      <TrustedBrands brands={brands} section={sections["trusted_brands"]} />
 
       {/* 7. Popular Categories */}
       <PopularCategories categories={categories} />
