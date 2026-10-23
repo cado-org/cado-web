@@ -112,11 +112,11 @@ export function PopularCategories({ categories = [] }: PopularCategoriesProps) {
                 {chunk.map((cat) => (
                   <Link
                     key={cat.id}
-                    href={`/categories/${cat.slug}`}
-                    className="group bg-white border border-gray-200 rounded-xl p-2 flex flex-col justify-between text-center hover:border-gray-300 transition active:scale-95"
+                    href={`/shop/${cat.slug}`}
+                    className="group bg-white rounded-xl p-2 flex flex-col justify-between text-center hover:border-gray-300 transition active:scale-95"
                   >
                     {/* Full uncropped image container */}
-                    <div className="relative w-full aspect-square bg-[#F8FAFC] rounded-lg overflow-hidden flex items-center justify-center p-1">
+                    <div className="relative w-full aspect-square  rounded-lg overflow-hidden flex items-center justify-center p-1">
                       {cat.image_url ? (
                         <Image
                           src={cat.image_url}
@@ -162,10 +162,10 @@ export function PopularCategories({ categories = [] }: PopularCategoriesProps) {
           {categories.slice(0, 6).map((cat) => (
             <Link
               key={cat.id}
-              href={`/categories/${cat.slug}`}
-              className="group bg-[#F8FAFC] border border-gray-200 rounded-lg p-3 flex flex-col items-center text-center hover:border-gray-300 hover:shadow-md transition"
+              href={`/shop/${cat.slug}`}
+              className="group rounded-lg p-3 flex flex-col items-center text-center hover:border-gray-300 hover:shadow-md transition"
             >
-              <div className="relative w-full aspect-4/3 bg-white rounded-md overflow-hidden mb-3 p-2 flex items-center justify-center border border-gray-100">
+              <div className="relative w-full aspect-4/3 bg-white rounded-md overflow-hidden mb-3 p-2 flex items-center justify-center ">
                 {cat.image_url ? (
                   <Image
                     src={cat.image_url}

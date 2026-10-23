@@ -36,7 +36,7 @@ export function ProductCard({ product }: ProductCardProps) {
     <div className="relative bg-white border border-gray-200 rounded-xl p-2.5 sm:p-4 flex flex-col justify-between hover:shadow-md hover:border-gray-300 active:scale-[0.98] lg:active:scale-100 transition-all duration-200 group">
       <div>
         {/* Product Image */}
-        <div className="relative w-full aspect-square bg-[#F8FAFC] rounded-lg overflow-hidden p-3 flex items-center justify-center">
+        <div className="relative w-full aspect-square  rounded-lg overflow-hidden p-3 flex items-center justify-center">
           {product.main_image_url && !imgError ? (
             <Image
               src={product.main_image_url}
@@ -53,7 +53,7 @@ export function ProductCard({ product }: ProductCardProps) {
           )}
 
           {product.packaging_details && (
-            <span className="absolute top-1.5 right-1.5 sm:top-2.5 sm:right-2.5 max-w-[80%] truncate bg-white/95 text-[9px] sm:text-[10px] font-bold text-gray-700 px-1.5 sm:px-2 py-0.5 rounded border border-gray-200 shadow-xs">
+            <span className="hidden sm:inline-block absolute top-1.5 right-1.5 sm:top-2.5 sm:right-2.5 max-w-[80%] truncate bg-white/95 text-[9px] sm:text-[10px] font-bold text-gray-700 px-1.5 sm:px-2 py-0.5 rounded border border-gray-200 shadow-xs">
               {product.packaging_details}
             </span>
           )}
@@ -80,15 +80,15 @@ export function ProductCard({ product }: ProductCardProps) {
             </h3>
           </Link>
           {product.sku && (
-            <p className="text-[10px] sm:text-[11px] font-mono text-gray-400 mt-0.5 truncate">
+            <p className="hidden sm:block text-[10px] sm:text-[11px] font-mono text-gray-400 mt-0.5 truncate">
               Code: {product.sku}
             </p>
           )}
         </div>
 
-        {/* Technical Highlights / Bullets */}
+        {/* Technical Highlights / Bullets (hidden on mobile, shown on desktop) */}
         {specs.length > 0 && (
-          <div className="mt-2 sm:mt-2.5 space-y-1">
+          <div className="hidden sm:block mt-2 sm:mt-2.5 space-y-1">
             {specs.slice(0, 3).map((spec, i) => (
               <div
                 key={i}
@@ -140,214 +140,4 @@ export function ProductCard({ product }: ProductCardProps) {
   );
 }
 
-/* ------------------------------------------------------------------ */
-/*  Mobile filter bottom-sheet (used by the shop page, mobile only)    */
-/* ------------------------------------------------------------------ */
-
-interface FilterOption {
-  id: string | number;
-  name: string;
-  slug: string;
-}
-
-interface MobileFiltersProps {
-  categories: FilterOption[];
-  brands: FilterOption[];
-  currentCategory: string;
-  currentBrand: string;
-  currentSort: string;
-  currentSearch: string;
-}
-
-export function MobileFilters({
-  categories,
-  brands,
-  currentCategory,
-  currentBrand,
-  currentSort,
-  currentSearch,
-}: MobileFiltersProps) {
-  const router = useRouter();
-  const [open, setOpen] = React.useState(false);
-  const [category, setCategory] = React.useState(currentCategory);
-  const [brand, setBrand] = React.useState(currentBrand);
-
-  const activeCount = (currentCategory ? 1 : 0) + (currentBrand ? 1 : 0);
-  const pendingCount = (category ? 1 : 0) + (brand ? 1 : 0);
-
-  const openSheet = () => {
-    // Start from whatever is currently applied
-    setCategory(currentCategory);
-    setBrand(currentBrand);
-    setOpen(true);
-  };
-
-  // Lock page scroll + close on Escape while the sheet is open
-  React.useEffect(() => {
-    if (!open) return;
-    const prevOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setOpen(false);
-    };
-    window.addEventListener("keydown", onKey);
-    return () => {
-      document.body.style.overflow = prevOverflow;
-      window.removeEventListener("keydown", onKey);
-    };
-  }, [open]);
-
-  const applyFilters = () => {
-    const params = new URLSearchParams();
-    if (category) params.set("category", category);
-    if (brand) params.set("brand", brand);
-    if (currentSearch) params.set("q", currentSearch);
-    if (currentSort) params.set("sort", currentSort);
-    const qs = params.toString();
-    router.push(qs ? `/shop?${qs}` : "/shop");
-    setOpen(false);
-  };
-
-  const clearAll = () => {
-    setCategory("");
-    setBrand("");
-  };
-
-  const chipClass = (selected: boolean) =>
-    `inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full border text-xs font-semibold transition cursor-pointer ${
-      selected
-        ? "bg-red-50 border-[#D71920] text-[#D71920]"
-        : "bg-white border-gray-200 text-gray-700 active:bg-gray-100"
-    }`;
-
-  return (
-    <>
-      {/* Trigger button (mobile / tablet only) */}
-      <button
-        type="button"
-        onClick={openSheet}
-        className="lg:hidden inline-flex items-center gap-2 px-3.5 py-2 rounded-lg bg-gray-900 text-white text-xs font-bold cursor-pointer active:scale-95 transition"
-      >
-        <SlidersHorizontal className="w-3.5 h-3.5" />
-        <span>Filters</span>
-        {activeCount > 0 && (
-          <span className="min-w-[18px] h-[18px] px-1 rounded-full bg-[#D71920] text-white text-[10px] leading-[18px] text-center">
-            {activeCount}
-          </span>
-        )}
-      </button>
-
-      {/* Bottom sheet */}
-      <div
-        className={`fixed inset-0 z-[100] lg:hidden transition-[visibility] duration-0 ${
-          open ? "visible" : "invisible delay-300"
-        }`}
-        role="dialog"
-        aria-modal="true"
-        aria-label="Filter products"
-        aria-hidden={!open}
-      >
-        {/* Backdrop */}
-        <button
-          type="button"
-          aria-label="Close filters"
-          onClick={() => setOpen(false)}
-          className={`absolute inset-0 bg-black/50 transition-opacity duration-300 ${
-            open ? "opacity-100" : "opacity-0"
-          }`}
-        />
-
-        {/* Sheet */}
-        <div
-          className={`absolute inset-x-0 bottom-0 max-h-[85vh] flex flex-col bg-white rounded-t-3xl shadow-2xl transition-transform duration-300 ease-out ${
-            open ? "translate-y-0" : "translate-y-full"
-          }`}
-        >
-          {/* Drag handle */}
-          <div className="pt-2.5 pb-1 flex justify-center">
-            <span className="w-10 h-1 rounded-full bg-gray-300" />
-          </div>
-
-          {/* Header */}
-          <div className="flex items-center justify-between px-5 py-3 border-b border-gray-100">
-            <h2 className="text-base font-black text-[#191919]">Filters</h2>
-            <button
-              type="button"
-              onClick={() => setOpen(false)}
-              aria-label="Close filters"
-              className="w-8 h-8 rounded-full bg-gray-100 text-gray-600 flex items-center justify-center cursor-pointer active:bg-gray-200"
-            >
-              <X className="w-4 h-4" />
-            </button>
-          </div>
-
-          {/* Scrollable body */}
-          <div className="flex-1 overflow-y-auto px-5 py-4 space-y-6">
-            <section>
-              <h3 className="text-[11px] font-bold uppercase tracking-wider text-gray-500 mb-3">
-                Categories
-              </h3>
-              <div className="flex flex-wrap gap-2">
-                {categories.map((cat) => {
-                  const selected = category === cat.slug;
-                  return (
-                    <button
-                      key={cat.id}
-                      type="button"
-                      onClick={() => setCategory(selected ? "" : cat.slug)}
-                      className={chipClass(selected)}
-                    >
-                      {selected && <Check className="w-3.5 h-3.5" />}
-                      {cat.name}
-                    </button>
-                  );
-                })}
-              </div>
-            </section>
-
-            <section>
-              <h3 className="text-[11px] font-bold uppercase tracking-wider text-gray-500 mb-3">
-                Brands
-              </h3>
-              <div className="flex flex-wrap gap-2">
-                {brands.map((b) => {
-                  const selected = brand === b.slug;
-                  return (
-                    <button
-                      key={b.id}
-                      type="button"
-                      onClick={() => setBrand(selected ? "" : b.slug)}
-                      className={chipClass(selected)}
-                    >
-                      {selected && <Check className="w-3.5 h-3.5" />}
-                      {b.name}
-                    </button>
-                  );
-                })}
-              </div>
-            </section>
-          </div>
-
-          {/* Sticky footer */}
-          <div className="flex items-center gap-3 px-5 py-3 border-t border-gray-100 bg-white pb-[max(0.75rem,env(safe-area-inset-bottom))]">
-            <button
-              type="button"
-              onClick={clearAll}
-              disabled={pendingCount === 0}
-              className="px-4 py-3 rounded-xl border border-gray-300 text-sm font-bold text-gray-700 disabled:opacity-40 cursor-pointer"
-            >
-              Clear all
-            </button>
-            <button
-              type="button"
-              onClick={applyFilters}
-              className="flex-1 py-3 rounded-xl bg-[#D71920] active:bg-[#B5121B] text-white text-sm font-bold cursor-pointer"
-            >
-              {pendingCount > 0 ? `Apply filters (${pendingCount})` : "Show all products"}
-            </button>
-          </div>
-        </div>
-      </div>
-    </>
-  );
-}
+export { MobileFilters } from "./ShopControls";

@@ -150,7 +150,7 @@ export function Footer({ settings }: FooterProps) {
                 </Link>
               </li>
               <li>
-                <Link href="/shop?brand=cado" className="hover:text-white transition">
+                <Link href="/brands/cado" className="hover:text-white transition">
                   CADO Products
                 </Link>
               </li>

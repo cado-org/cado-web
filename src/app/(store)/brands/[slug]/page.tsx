@@ -2,12 +2,50 @@ import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
+import type { Metadata } from "next";
 import { getBrandBySlug, getProducts } from "@/lib/data";
 import { ProductCard } from "@/components/products/ProductCard";
 import { PackageOpen, ExternalLink } from "lucide-react";
+import { ENV } from "@/lib/env";
 
 interface BrandDetailPageProps {
   params: Promise<{ slug: string }>;
+}
+
+export async function generateMetadata({
+  params,
+}: BrandDetailPageProps): Promise<Metadata> {
+  const { slug } = await params;
+  const brand = await getBrandBySlug(slug);
+  const baseUrl = ENV.SITE_URL || "https://cado.in";
+  const canonicalUrl = `${baseUrl}/brands/${slug}`;
+
+  if (!brand) {
+    return {
+      title: "Brand Not Found | CADO Building Materials",
+    };
+  }
+
+  const title = `${brand.name} Building Materials & Products | CADO`;
+  const description =
+    brand.description ||
+    `Browse genuine ${brand.name} products, adhesives, chemicals, and construction solutions at CADO.`;
+
+  return {
+    title,
+    description,
+    alternates: {
+      canonical: canonicalUrl,
+    },
+    openGraph: {
+      title,
+      description,
+      url: canonicalUrl,
+      siteName: "CADO Building Materials",
+      type: "website",
+      images: brand.logo_url ? [{ url: brand.logo_url, alt: brand.name }] : undefined,
+    },
+  };
 }
 
 export default async function BrandDetailPage({ params }: BrandDetailPageProps) {

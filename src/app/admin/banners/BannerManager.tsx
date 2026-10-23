@@ -23,7 +23,7 @@ export function BannerManager({ banners }: BannerManagerProps) {
     desktop_image_url: "",
     mobile_image_url: "",
     primary_cta_label: "Shop CADO Products",
-    primary_cta_url: "/shop?brand=cado",
+    primary_cta_url: "/brands/cado",
     secondary_cta_label: "Enquire on WhatsApp",
     secondary_cta_url: "whatsapp",
     overlay_opacity: 0.4,
@@ -40,7 +40,7 @@ export function BannerManager({ banners }: BannerManagerProps) {
       desktop_image_url: "/images/hero/hero-tile-installation.svg",
       mobile_image_url: "",
       primary_cta_label: "Shop CADO Products",
-      primary_cta_url: "/shop?brand=cado",
+      primary_cta_url: "/brands/cado",
       secondary_cta_label: "Enquire on WhatsApp",
       secondary_cta_url: "whatsapp",
       overlay_opacity: 0.4,
@@ -292,7 +292,7 @@ export function BannerManager({ banners }: BannerManagerProps) {
                     onChange={(e) =>
                       setFormData({ ...formData, primary_cta_url: e.target.value })
                     }
-                    placeholder="/shop?brand=cado"
+                    placeholder="/brands/cado"
                     className="w-full text-xs px-3 py-2 border border-gray-300 rounded focus:border-[#D71920] focus:outline-none"
                   />
                 </div>

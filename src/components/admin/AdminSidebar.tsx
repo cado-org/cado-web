@@ -2,6 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import {
   LayoutDashboard,
@@ -43,13 +44,21 @@ export function AdminSidebar({ onCloseMobile }: AdminSidebarProps) {
 
   return (
     <aside className="w-64 bg-[#171717] text-white flex flex-col h-full shrink-0 border-r border-neutral-800">
-      {/* Sidebar Brand */}
-      <div className="h-16 px-6 border-b border-neutral-800 flex items-center justify-between">
-        <Link href="/admin/dashboard" className="flex items-center space-x-2">
-          <span className="font-black text-xl text-[#D71920] tracking-wider">
-            CADO
-          </span>
-          <span className="text-xs font-bold text-gray-400 uppercase tracking-widest bg-neutral-800 px-2 py-0.5 rounded">
+      {/* Sidebar Brand with Real CADO Logo */}
+      <div className="h-16 px-5 border-b border-neutral-800 flex items-center justify-between">
+        <Link href="/admin/dashboard" className="flex items-center space-x-2.5">
+          <div className="bg-white px-2 py-1 rounded-md shadow-xs flex items-center">
+            <div className="relative h-6 w-24">
+              <Image
+                src="/cado-logo.png"
+                alt="CADO"
+                fill
+                priority
+                className="object-contain"
+              />
+            </div>
+          </div>
+          <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest bg-neutral-800 px-2 py-1 rounded">
             Admin
           </span>
         </Link>
