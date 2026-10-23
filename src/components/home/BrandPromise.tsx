@@ -14,6 +14,7 @@ export function BrandPromise({ section }: BrandPromiseProps) {
   const description =
     content.description ||
     "We are committed to providing high quality construction products and accessories that help professionals and homeowners build durable, beautiful and lasting spaces.";
+  const imageUrl = content.image_url || "/images/CADO-Tile-123.png";
 
   const benefits = [
     {
@@ -39,21 +40,22 @@ export function BrandPromise({ section }: BrandPromiseProps) {
   ];
 
   return (
-    <section className="py-12 lg:py-16 bg-[#FAFAFA] border-t border-gray-100">
+    <section className="py-12 lg:py-16 border-t border-gray-100">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="bg-white rounded-2xl border border-gray-200/90 shadow-sm overflow-hidden grid grid-cols-1 lg:grid-cols-12 items-stretch">
-          {/* Left: Engineer looking at construction framework */}
-          <div className="lg:col-span-5 relative min-h-[300px] sm:min-h-[380px] bg-slate-900">
+        <div className="bg-white rounded-none shadow-sm overflow-hidden grid grid-cols-1 lg:grid-cols-12 items-center">
+          {/* Left: Product & Packaging Image (4:3 natural aspect ratio prevents cropping on desktop) */}
+          <div className="lg:col-span-5 relative w-full aspect-[4/3] bg-gray-50 overflow-hidden">
             <Image
-              src="/images/why-choose-cado.svg"
+              src={imageUrl}
               alt="Why Choose CADO - Construction Quality"
               fill
-              className="object-cover object-left"
+              className="object-contain sm:object-cover object-center"
+              sizes="(max-width: 1024px) 100vw, 42vw"
             />
           </div>
 
           {/* Right: Content and 4 Key Pillars in a row */}
-          <div className="lg:col-span-7 p-6 sm:p-10 lg:p-12 flex flex-col justify-center space-y-6">
+          <div className="lg:col-span-7 p-6 sm:p-8 lg:p-10 flex flex-col justify-center space-y-6">
             <div>
               <span className="text-[#D71920] text-xs font-black tracking-widest uppercase">
                 {eyebrow}

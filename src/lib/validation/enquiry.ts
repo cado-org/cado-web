@@ -37,19 +37,34 @@ export function generateWhatsAppMessage(
   data: EnquiryFormData,
   companyName: string = "CADO Building Products"
 ): string {
+  const isGeneral =
+    data.items.length === 1 &&
+    (!data.items[0].product_id ||
+      data.items[0].product_name === "General Building Materials Enquiry");
+
   const lines: string[] = [
     `*Hello ${companyName} Team,*`,
     "",
-    "I would like to enquire about the following building product(s):",
-    "",
   ];
 
-  data.items.forEach((item, index) => {
-    lines.push(`*Item ${index + 1}:* ${item.product_name}`);
-    if (item.product_sku) lines.push(`  • Code/SKU: ${item.product_sku}`);
-    lines.push(`  • Requested Qty: ${item.requested_quantity} ${item.packaging ? `(${item.packaging})` : ""}`);
+  if (isGeneral) {
+    lines.push("I would like to enquire about bulk / large quantity building materials supply.");
     lines.push("");
-  });
+  } else {
+    lines.push("I would like to enquire about the following building product(s):");
+    lines.push("");
+
+    data.items.forEach((item, index) => {
+      lines.push(`*Item ${index + 1}:* ${item.product_name}`);
+      if (item.product_sku) lines.push(`  • Code/SKU: ${item.product_sku}`);
+      if (item.requested_quantity && item.requested_quantity > 1) {
+        lines.push(`  • Quantity: ${item.requested_quantity} ${item.packaging ? `(${item.packaging})` : ""}`);
+      } else if (item.packaging) {
+        lines.push(`  • Packaging: ${item.packaging}`);
+      }
+      lines.push("");
+    });
+  }
 
   lines.push("*Customer Details:*");
   lines.push(`• Name: ${data.customer_name}`);
@@ -60,11 +75,11 @@ export function generateWhatsAppMessage(
 
   if (data.additional_requirements) {
     lines.push("");
-    lines.push(`*Additional Requirements:* ${data.additional_requirements}`);
+    lines.push(`*Requirements / Notes:* ${data.additional_requirements}`);
   }
 
   lines.push("");
-  lines.push("Please share the product availability, best bulk pricing, and quotation.");
+  lines.push("Please share product availability, best bulk pricing, and quotation.");
   lines.push("Thank you!");
 
   return lines.join("\n");

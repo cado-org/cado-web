@@ -3,6 +3,46 @@ import { createServerClient } from "@supabase/ssr";
 import { ENV, isSupabaseConfigured } from "@/lib/env";
 
 export async function middleware(request: NextRequest) {
+  const { pathname, searchParams } = request.nextUrl;
+
+  // 1. Redirect legacy /categories/[slug] -> /shop/[slug] (301 Permanent Redirect)
+  if (pathname.startsWith("/categories")) {
+    const newPath = pathname.replace(/^\/categories/, "/shop");
+    const redirectUrl = request.nextUrl.clone();
+    redirectUrl.pathname = newPath;
+    return NextResponse.redirect(redirectUrl, { status: 301 });
+  }
+
+  // 2. Redirect legacy query-param shop URLs -> clean canonical routes (301 Permanent Redirect)
+  if (pathname === "/shop") {
+    const category = searchParams.get("category");
+    const subcategory = searchParams.get("subcategory");
+    const brand = searchParams.get("brand");
+
+    if (category || brand) {
+      let cleanPath = "/shop";
+      if (category) {
+        cleanPath += `/${encodeURIComponent(category)}`;
+        if (subcategory) {
+          cleanPath += `/${encodeURIComponent(subcategory)}`;
+          if (brand) cleanPath += `/${encodeURIComponent(brand)}`;
+        } else if (brand) {
+          cleanPath += `/all/${encodeURIComponent(brand)}`;
+        }
+      } else if (brand) {
+        cleanPath = `/brands/${encodeURIComponent(brand)}`;
+      }
+
+      const redirectUrl = request.nextUrl.clone();
+      redirectUrl.pathname = cleanPath;
+      redirectUrl.searchParams.delete("category");
+      redirectUrl.searchParams.delete("subcategory");
+      redirectUrl.searchParams.delete("brand");
+
+      return NextResponse.redirect(redirectUrl, { status: 301 });
+    }
+  }
+
   let response = NextResponse.next({
     request: {
       headers: request.headers,

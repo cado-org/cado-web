@@ -108,11 +108,11 @@ export function CategorySection({ categories = [] }: CategorySectionProps) {
                 {chunk.map((cat) => (
                   <Link
                     key={cat.id}
-                    href={`/categories/${cat.slug}`}
-                    className="group flex flex-col justify-between bg-white border border-gray-200 rounded-xl p-2 text-center hover:border-gray-300 transition active:scale-95"
+                    href={`/shop/${cat.slug}`}
+                    className="group flex flex-col justify-between bg-white  rounded-xl p-2 text-center hover:border-gray-300 transition active:scale-95"
                   >
                     {/* Full uncropped image inside card */}
-                    <div className="relative w-full aspect-square bg-[#F8FAFC] rounded-lg overflow-hidden flex items-center justify-center p-1">
+                    <div className="relative w-full aspect-square rounded-lg overflow-hidden flex items-center justify-center p-1">
                       {cat.image_url ? (
                         <Image
                           src={cat.image_url}
@@ -161,15 +161,15 @@ export function CategorySection({ categories = [] }: CategorySectionProps) {
             return (
               <Link
                 key={cat.id}
-                href={`/categories/${cat.slug}`}
-                className={`group flex flex-col justify-between p-3.5 rounded-lg border transition-all duration-200 bg-white hover:shadow-md ${
+                href={`/shop/${cat.slug}`}
+                className={`group flex flex-col justify-between p-3.5 rounded-lg  transition-all duration-200 bg-white hover:shadow-md ${
                   isFirst
-                    ? "border-[#D71920] ring-1 ring-[#D71920]"
+                    ? ""
                     : "border-gray-200 hover:border-gray-300"
                 }`}
               >
                 {/* Image Container */}
-                <div className="relative w-full aspect-square bg-[#F5F5F5] rounded-md overflow-hidden p-2 flex items-center justify-center">
+                <div className="relative w-full aspect-square  rounded-md overflow-hidden p-2 flex items-center justify-center">
                   {cat.image_url ? (
                     <Image
                       src={cat.image_url}
