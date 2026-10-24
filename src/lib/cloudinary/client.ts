@@ -27,43 +27,31 @@ export async function uploadImageToCloudinary(
     return null;
   }
 
-  try {
-    const base64Uri = `data:${mimeType};base64,${fileBuffer.toString("base64")}`;
-    const result = await cloudinary.uploader.upload(base64Uri, {
-      folder,
-      resource_type: "auto",
-      timeout: 60000,
-    });
-
-    return {
-      url: result.secure_url,
-      public_id: result.public_id,
-    };
-  } catch (error: any) {
-    console.error("Cloudinary upload attempt failed, falling back to upload_stream:", error?.message);
-    
-    // Fallback stream upload
-    return new Promise((resolve, reject) => {
-      const uploadStream = cloudinary.uploader.upload_stream(
-        {
-          folder,
-          resource_type: "auto",
-          timeout: 60000,
-        },
-        (err, res) => {
-          if (err || !res) {
-            reject(err || new Error("Failed to upload image to Cloudinary"));
-          } else {
-            resolve({
-              url: res.secure_url,
-              public_id: res.public_id,
-            });
-          }
+  return new Promise((resolve, reject) => {
+    const uploadStream = cloudinary.uploader.upload_stream(
+      {
+        folder,
+        resource_type: "auto",
+        timeout: 60000,
+      },
+      (err, res) => {
+        if (err || !res) {
+          console.error("Cloudinary upload_stream failed, attempting base64 fallback:", err?.message);
+          const base64Uri = `data:${mimeType};base64,${fileBuffer.toString("base64")}`;
+          cloudinary.uploader
+            .upload(base64Uri, { folder, resource_type: "auto", timeout: 60000 })
+            .then((r) => resolve({ url: r.secure_url, public_id: r.public_id }))
+            .catch((fallbackErr) => reject(fallbackErr || err));
+        } else {
+          resolve({
+            url: res.secure_url,
+            public_id: res.public_id,
+          });
         }
-      );
-      uploadStream.end(fileBuffer);
-    });
-  }
+      }
+    );
+    uploadStream.end(fileBuffer);
+  });
 }
 
 export async function deleteImageFromCloudinary(publicId: string): Promise<boolean> {

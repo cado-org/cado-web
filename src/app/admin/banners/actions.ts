@@ -34,6 +34,17 @@ export async function saveBanner(formData: any, id?: string) {
       const { error } = await admin.from("hero_banners").update(payload).eq("id", id);
       if (error) throw error;
     } else {
+      // Enforce limit of 3 banners
+      const { count, error: countErr } = await admin
+        .from("hero_banners")
+        .select("*", { count: "exact", head: true });
+      if (!countErr && (count ?? 0) >= 3) {
+        return {
+          error:
+            "Maximum limit of 3 hero banner slides reached. Please delete or edit an existing banner.",
+        };
+      }
+
       const { error } = await admin.from("hero_banners").insert(payload);
       if (error) throw error;
     }

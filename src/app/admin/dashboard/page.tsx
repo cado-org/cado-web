@@ -11,6 +11,7 @@ import {
   Clock,
   ArrowRight,
   TrendingUp,
+  ShoppingCart,
 } from "lucide-react";
 import { Enquiry, Product } from "@/types/database";
 
@@ -81,7 +82,32 @@ export default async function AdminDashboardPage() {
 
       {/* Metrics Row */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-        <div className="bg-white p-5 rounded-xl border border-gray-200 shadow-xs flex items-center justify-between">
+        <Link
+          href="/admin/orders"
+          className="bg-white p-5 rounded-xl border border-gray-200 shadow-xs flex items-center justify-between hover:border-[#D71920] transition group cursor-pointer"
+        >
+          <div>
+            <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider group-hover:text-[#D71920] transition">
+              Customer Orders
+            </span>
+            <div className="flex items-baseline space-x-2 mt-1">
+              <span className="text-2xl font-black text-gray-900">{totalEnquiries}</span>
+              {newEnquiries > 0 && (
+                <span className="text-xs bg-[#D71920] text-white font-bold px-1.5 py-0.5 rounded">
+                  {newEnquiries} New
+                </span>
+              )}
+            </div>
+          </div>
+          <div className="w-11 h-11 rounded-lg bg-red-50 text-[#D71920] flex items-center justify-center group-hover:bg-[#D71920] group-hover:text-white transition">
+            <ShoppingCart className="w-5 h-5" />
+          </div>
+        </Link>
+
+        <Link
+          href="/admin/products"
+          className="bg-white p-5 rounded-xl border border-gray-200 shadow-xs flex items-center justify-between hover:border-gray-400 transition"
+        >
           <div>
             <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
               Total Products
@@ -93,12 +119,15 @@ export default async function AdminDashboardPage() {
               </span>
             </div>
           </div>
-          <div className="w-11 h-11 rounded-lg bg-red-50 text-[#D71920] flex items-center justify-center">
+          <div className="w-11 h-11 rounded-lg bg-gray-100 text-gray-700 flex items-center justify-center">
             <Package className="w-5 h-5" />
           </div>
-        </div>
+        </Link>
 
-        <div className="bg-white p-5 rounded-xl border border-gray-200 shadow-xs flex items-center justify-between">
+        <Link
+          href="/admin/categories"
+          className="bg-white p-5 rounded-xl border border-gray-200 shadow-xs flex items-center justify-between hover:border-gray-400 transition"
+        >
           <div>
             <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
               Categories
@@ -110,9 +139,12 @@ export default async function AdminDashboardPage() {
           <div className="w-11 h-11 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center">
             <FolderTree className="w-5 h-5" />
           </div>
-        </div>
+        </Link>
 
-        <div className="bg-white p-5 rounded-xl border border-gray-200 shadow-xs flex items-center justify-between">
+        <Link
+          href="/admin/brands"
+          className="bg-white p-5 rounded-xl border border-gray-200 shadow-xs flex items-center justify-between hover:border-gray-400 transition"
+        >
           <div>
             <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
               Brands
@@ -124,26 +156,7 @@ export default async function AdminDashboardPage() {
           <div className="w-11 h-11 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center">
             <Award className="w-5 h-5" />
           </div>
-        </div>
-
-        <div className="bg-white p-5 rounded-xl border border-gray-200 shadow-xs flex items-center justify-between">
-          <div>
-            <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
-              Enquiries
-            </span>
-            <div className="flex items-baseline space-x-2 mt-1">
-              <span className="text-2xl font-black text-gray-900">{totalEnquiries}</span>
-              {newEnquiries > 0 && (
-                <span className="text-xs bg-[#D71920] text-white font-bold px-1.5 py-0.5 rounded">
-                  {newEnquiries} New
-                </span>
-              )}
-            </div>
-          </div>
-          <div className="w-11 h-11 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center">
-            <MessageSquare className="w-5 h-5" />
-          </div>
-        </div>
+        </Link>
       </div>
 
       {/* Two-Column Activity Feeds: Recent Enquiries + Recent Product Updates */}

@@ -14,7 +14,7 @@ interface ImageUploaderProps {
 }
 
 async function optimizeImageForUpload(file: File): Promise<File | Blob> {
-  if (file.type === "image/svg+xml" || file.size <= 500 * 1024) {
+  if (file.type === "image/svg+xml" || file.size <= 250 * 1024) {
     return file;
   }
 
@@ -23,7 +23,7 @@ async function optimizeImageForUpload(file: File): Promise<File | Blob> {
     reader.onload = (e) => {
       const img = new window.Image();
       img.onload = () => {
-        const MAX_DIM = 1920;
+        const MAX_DIM = 1600;
         let width = img.width;
         let height = img.height;
 
@@ -56,7 +56,7 @@ async function optimizeImageForUpload(file: File): Promise<File | Blob> {
             }
           },
           "image/webp",
-          0.85
+          0.80
         );
       };
       img.onerror = () => resolve(file);

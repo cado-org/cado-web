@@ -26,6 +26,17 @@ export async function saveCategory(formData: any, id?: string) {
       const { error } = await admin.from("categories").update(payload).eq("id", id);
       if (error) throw error;
     } else {
+      // Enforce limit of 10 categories (subcategories have separate management)
+      const { count, error: countErr } = await admin
+        .from("categories")
+        .select("*", { count: "exact", head: true });
+      if (!countErr && (count ?? 0) >= 10) {
+        return {
+          error:
+            "Maximum limit of 10 categories reached. Please delete or edit an existing category.",
+        };
+      }
+
       const { error } = await admin.from("categories").insert(payload);
       if (error) throw error;
     }

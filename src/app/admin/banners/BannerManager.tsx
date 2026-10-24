@@ -31,13 +31,19 @@ export function BannerManager({ banners }: BannerManagerProps) {
     is_active: true,
   });
 
+  const isLimitReached = banners.length >= 3;
+
   const openCreateModal = () => {
+    if (banners.length >= 3) {
+      alert("Maximum limit of 3 hero banners reached. Please edit or delete an existing banner.");
+      return;
+    }
     setEditingBanner(null);
     setFormData({
       eyebrow: "BUILD BETTER WITH CADO",
       title: "",
       description: "",
-      desktop_image_url: "/images/hero/hero-tile-installation.svg",
+      desktop_image_url: "",
       mobile_image_url: "",
       primary_cta_label: "Shop CADO Products",
       primary_cta_url: "/brands/cado",
@@ -97,16 +103,33 @@ export function BannerManager({ banners }: BannerManagerProps) {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-xl font-black text-gray-900">Hero Banners</h2>
+          <div className="flex items-center space-x-2">
+            <h2 className="text-xl font-black text-gray-900">Hero Banners</h2>
+            <span
+              className={`text-[11px] font-bold px-2 py-0.5 rounded-full ${
+                isLimitReached
+                  ? "bg-amber-100 text-amber-800 border border-amber-300"
+                  : "bg-gray-100 text-gray-700 border border-gray-200"
+              }`}
+            >
+              {banners.length} / 3 Banners
+            </span>
+          </div>
           <p className="text-xs text-gray-500 mt-0.5">
-            Manage homepage carousel slides, desktop and mobile hero photography.
+            Manage homepage carousel slides (maximum limit of 3 banner slides).
           </p>
         </div>
 
         <button
           type="button"
           onClick={openCreateModal}
-          className="inline-flex items-center px-4 py-2.5 bg-[#D71920] hover:bg-[#B5121B] text-white text-xs font-bold uppercase tracking-wider rounded-lg shadow transition space-x-1.5"
+          disabled={isLimitReached}
+          className={`inline-flex items-center px-4 py-2.5 text-white text-xs font-bold uppercase tracking-wider rounded-lg shadow transition space-x-1.5 ${
+            isLimitReached
+              ? "bg-gray-400 cursor-not-allowed opacity-60"
+              : "bg-[#D71920] hover:bg-[#B5121B]"
+          }`}
+          title={isLimitReached ? "Maximum limit of 3 banners reached" : "Add Banner Slide"}
         >
           <Plus className="w-4 h-4" />
           <span>Add Banner Slide</span>
@@ -217,7 +240,9 @@ export function BannerManager({ banners }: BannerManagerProps) {
                 <input
                   type="text"
                   value={formData.eyebrow}
-                  onChange={(e) => setFormData({ ...formData, eyebrow: e.target.value })}
+                  onChange={(e) =>
+                    setFormData((prev) => ({ ...prev, eyebrow: e.target.value }))
+                  }
                   placeholder="e.g. BUILD BETTER WITH CADO"
                   className="w-full text-xs px-3 py-2 border border-gray-300 rounded focus:border-[#D71920] focus:outline-none"
                 />
@@ -231,7 +256,9 @@ export function BannerManager({ banners }: BannerManagerProps) {
                   type="text"
                   required
                   value={formData.title}
-                  onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                  onChange={(e) =>
+                    setFormData((prev) => ({ ...prev, title: e.target.value }))
+                  }
                   placeholder="e.g. Premium Tile Adhesives for Stronger Spaces"
                   className="w-full text-xs px-3 py-2 border border-gray-300 rounded focus:border-[#D71920] focus:outline-none"
                 />
@@ -245,7 +272,7 @@ export function BannerManager({ banners }: BannerManagerProps) {
                   rows={2}
                   value={formData.description}
                   onChange={(e) =>
-                    setFormData({ ...formData, description: e.target.value })
+                    setFormData((prev) => ({ ...prev, description: e.target.value }))
                   }
                   className="w-full text-xs px-3 py-2 border border-gray-300 rounded focus:border-[#D71920] focus:outline-none"
                 />
@@ -255,7 +282,12 @@ export function BannerManager({ banners }: BannerManagerProps) {
                 label="Desktop Hero Banner (16:9 Ratio recommended) *"
                 helperText="16:9 landscape format (e.g. 1920x1080, max 8MB)"
                 value={formData.desktop_image_url}
-                onChange={(url) => setFormData({ ...formData, desktop_image_url: url })}
+                onChange={(url) =>
+                  setFormData((prev) => ({ ...prev, desktop_image_url: url }))
+                }
+                onRemove={() =>
+                  setFormData((prev) => ({ ...prev, desktop_image_url: "" }))
+                }
                 folder="cado-hero"
               />
 
@@ -263,7 +295,12 @@ export function BannerManager({ banners }: BannerManagerProps) {
                 label="Mobile Hero Banner (9:16 Ratio recommended)"
                 helperText="9:16 portrait format for phones (e.g. 1080x1920, max 8MB)"
                 value={formData.mobile_image_url}
-                onChange={(url) => setFormData({ ...formData, mobile_image_url: url })}
+                onChange={(url) =>
+                  setFormData((prev) => ({ ...prev, mobile_image_url: url }))
+                }
+                onRemove={() =>
+                  setFormData((prev) => ({ ...prev, mobile_image_url: "" }))
+                }
                 folder="cado-hero"
               />
 
@@ -276,7 +313,10 @@ export function BannerManager({ banners }: BannerManagerProps) {
                     type="text"
                     value={formData.primary_cta_label}
                     onChange={(e) =>
-                      setFormData({ ...formData, primary_cta_label: e.target.value })
+                      setFormData((prev) => ({
+                        ...prev,
+                        primary_cta_label: e.target.value,
+                      }))
                     }
                     placeholder="Shop CADO Products"
                     className="w-full text-xs px-3 py-2 border border-gray-300 rounded focus:border-[#D71920] focus:outline-none"
@@ -290,7 +330,10 @@ export function BannerManager({ banners }: BannerManagerProps) {
                     type="text"
                     value={formData.primary_cta_url}
                     onChange={(e) =>
-                      setFormData({ ...formData, primary_cta_url: e.target.value })
+                      setFormData((prev) => ({
+                        ...prev,
+                        primary_cta_url: e.target.value,
+                      }))
                     }
                     placeholder="/brands/cado"
                     className="w-full text-xs px-3 py-2 border border-gray-300 rounded focus:border-[#D71920] focus:outline-none"

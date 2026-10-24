@@ -53,18 +53,28 @@ function FooterAccordion({
         type="button"
         onClick={() => setOpen((o) => !o)}
         aria-expanded={open}
-        className="flex w-full items-center justify-between py-4 text-left md:py-0 md:mb-4 md:pointer-events-none md:cursor-default"
+        className="flex w-full items-center justify-between py-4 text-left md:py-0 md:mb-4 md:pointer-events-none md:cursor-default group cursor-pointer"
       >
         <h4 className="text-xs font-bold uppercase tracking-widest text-white">
           {title}
         </h4>
-        <span className="md:hidden text-gray-400">
-          {open ? <Minus className="w-4 h-4" /> : <Plus className="w-4 h-4" />}
+        <span
+          className={`md:hidden text-gray-400 transition-transform duration-300 ease-in-out ${
+            open ? "rotate-45 text-white" : "rotate-0"
+          }`}
+        >
+          <Plus className="w-4 h-4" />
         </span>
       </button>
 
-      <div className={`${open ? "block" : "hidden"} pb-4 md:block md:pb-0`}>
-        {children}
+      <div
+        className={`grid transition-[grid-template-rows,opacity] duration-300 ease-in-out md:!grid-rows-[1fr] md:!opacity-100 ${
+          open ? "grid-rows-[1fr] opacity-100 pb-4" : "grid-rows-[0fr] opacity-0 pb-0"
+        }`}
+      >
+        <div className="overflow-hidden">
+          {children}
+        </div>
       </div>
     </div>
   );
@@ -271,9 +281,20 @@ export function Footer({ settings }: FooterProps) {
         </div>
 
         {/* Bottom Bar */}
-        <div className="pt-6 flex flex-col sm:flex-row items-center justify-between text-xs text-gray-500 gap-3">
-          <p>© 2026 CADO. All rights reserved.</p>
-          <p className="text-gray-400">
+        <div className="pt-6 flex flex-col sm:flex-row items-center justify-between text-xs text-gray-500 gap-3 text-center sm:text-left">
+          <p className="order-1 sm:order-1">© 2026 CADO. All rights reserved.</p>
+          <p className="order-3 sm:order-2 text-gray-400">
+            Crafted by{" "}
+            <a
+              href="https://www.ekodrix.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-gray-300 hover:text-white underline underline-offset-2 transition font-medium"
+            >
+              ekodrix
+            </a>
+          </p>
+          <p className="order-2 sm:order-3 text-gray-400">
             Made for a stronger tomorrow. Build with CADO.
           </p>
         </div>

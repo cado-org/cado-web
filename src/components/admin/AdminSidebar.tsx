@@ -18,6 +18,7 @@ import {
   Mail,
   Settings,
   ExternalLink,
+  ShoppingCart,
   LogOut,
 } from "lucide-react";
 
@@ -31,6 +32,7 @@ export function AdminSidebar({ onCloseMobile }: AdminSidebarProps) {
 
   const navItems = [
     { label: "Dashboard", href: "/admin/dashboard", icon: LayoutDashboard },
+    { label: "Orders", href: "/admin/orders", icon: ShoppingCart },
     { label: "Products", href: "/admin/products", icon: Package },
     { label: "Categories", href: "/admin/categories", icon: FolderTree },
     { label: "Subcategories", href: "/admin/subcategories", icon: GitFork },

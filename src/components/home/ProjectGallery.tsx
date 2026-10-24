@@ -16,13 +16,31 @@ export function ProjectGallery({ projects = [] }: ProjectGalleryProps) {
   }
 
   const projectItems = projects.slice(0, 4);
+  const sectionRef = useRef<HTMLElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const [activeIdx, setActiveIdx] = useState(0);
   const [autoPlay, setAutoPlay] = useState(true);
+  const [isInView, setIsInView] = useState(false);
 
-  // Auto sliding: advances until the user touches/interacts with mobile screen
+  // Viewport detection: only run mobile animation when section is scrolled into view
   useEffect(() => {
-    if (!autoPlay || projectItems.length <= 1) return;
+    const el = sectionRef.current;
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsInView(entry.isIntersecting);
+      },
+      { threshold: 0.15 }
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  // Auto sliding: advances only when section is in view, until user touches mobile screen
+  useEffect(() => {
+    if (!autoPlay || !isInView || projectItems.length <= 1) return;
 
     const interval = setInterval(() => {
       setActiveIdx((prev) => {
@@ -38,7 +56,7 @@ export function ProjectGallery({ projects = [] }: ProjectGalleryProps) {
     }, 4000);
 
     return () => clearInterval(interval);
-  }, [autoPlay, projectItems.length]);
+  }, [autoPlay, isInView, projectItems.length]);
 
   // When user touches the carousel, stop auto-play permanently
   const handleTouchStart = () => {
@@ -68,7 +86,7 @@ export function ProjectGallery({ projects = [] }: ProjectGalleryProps) {
   };
 
   return (
-    <section className="py-12 md:py-16">
+    <section ref={sectionRef} className="py-12 md:py-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-6 md:mb-8 gap-3">
