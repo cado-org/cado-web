@@ -246,6 +246,18 @@ export function EnquiryCartDrawer() {
                   />
                 </div>
 
+                <div>
+                  <input
+                    type="email"
+                    placeholder="Email Address (Optional)"
+                    value={formData.customer_email}
+                    onChange={(e) =>
+                      setFormData({ ...formData, customer_email: e.target.value })
+                    }
+                    className="w-full px-3 py-2 text-xs border border-gray-300 rounded focus:border-[#D71920] focus:outline-none"
+                  />
+                </div>
+
                 <div className="grid grid-cols-2 gap-2">
                   <input
                     type="text"

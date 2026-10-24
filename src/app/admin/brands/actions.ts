@@ -27,6 +27,17 @@ export async function saveBrand(formData: any, id?: string) {
       const { error } = await admin.from("brands").update(payload).eq("id", id);
       if (error) throw error;
     } else {
+      // Enforce limit of 10 brands
+      const { count, error: countErr } = await admin
+        .from("brands")
+        .select("*", { count: "exact", head: true });
+      if (!countErr && (count ?? 0) >= 10) {
+        return {
+          error:
+            "Maximum limit of 10 brands reached. Please delete or edit an existing brand.",
+        };
+      }
+
       const { error } = await admin.from("brands").insert(payload);
       if (error) throw error;
     }

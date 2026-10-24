@@ -28,7 +28,13 @@ export function ProjectManager({ projects }: ProjectManagerProps) {
     is_active: true,
   });
 
+  const isLimitReached = projects.length >= 10;
+
   const openCreateModal = () => {
+    if (projects.length >= 10) {
+      alert("Maximum limit of 10 projects reached. Please edit or delete an existing project.");
+      return;
+    }
     setEditingItem(null);
     setFormData({
       title: "",
@@ -36,7 +42,7 @@ export function ProjectManager({ projects }: ProjectManagerProps) {
       project_type: "Residential Projects",
       description: "",
       location: "Kerala",
-      cover_image_url: "/images/projects/residential-floors.svg",
+      cover_image_url: "",
       completion_date: "2026",
       display_order: projects.length + 1,
       is_active: true,
@@ -88,16 +94,33 @@ export function ProjectManager({ projects }: ProjectManagerProps) {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-xl font-black text-gray-900">Project Gallery</h2>
+          <div className="flex items-center space-x-2">
+            <h2 className="text-xl font-black text-gray-900">Project Gallery</h2>
+            <span
+              className={`text-[11px] font-bold px-2 py-0.5 rounded-full ${
+                isLimitReached
+                  ? "bg-amber-100 text-amber-800 border border-amber-300"
+                  : "bg-gray-100 text-gray-700 border border-gray-200"
+              }`}
+            >
+              {projects.length} / 10 Projects
+            </span>
+          </div>
           <p className="text-xs text-gray-500 mt-0.5">
-            Manage site installation photos and architectural case studies.
+            Manage architectural installation case studies (maximum limit of 10 projects).
           </p>
         </div>
 
         <button
           type="button"
           onClick={openCreateModal}
-          className="inline-flex items-center px-4 py-2.5 bg-[#D71920] hover:bg-[#B5121B] text-white text-xs font-bold uppercase tracking-wider rounded-lg shadow transition space-x-1.5"
+          disabled={isLimitReached}
+          className={`inline-flex items-center px-4 py-2.5 text-white text-xs font-bold uppercase tracking-wider rounded-lg shadow transition space-x-1.5 ${
+            isLimitReached
+              ? "bg-gray-400 cursor-not-allowed opacity-60"
+              : "bg-[#D71920] hover:bg-[#B5121B]"
+          }`}
+          title={isLimitReached ? "Maximum limit of 10 projects reached" : "Add Project"}
         >
           <Plus className="w-4 h-4" />
           <span>Add Project</span>
@@ -267,7 +290,12 @@ export function ProjectManager({ projects }: ProjectManagerProps) {
               <ImageUploader
                 label="Cover Image *"
                 value={formData.cover_image_url}
-                onChange={(url) => setFormData({ ...formData, cover_image_url: url })}
+                onChange={(url) =>
+                  setFormData((prev) => ({ ...prev, cover_image_url: url }))
+                }
+                onRemove={() =>
+                  setFormData((prev) => ({ ...prev, cover_image_url: "" }))
+                }
                 folder="cado-projects"
               />
 

@@ -76,10 +76,10 @@ function splitTitle(text: string): [string, string] {
 export function HeroBanner({ banner, banners = [] }: HeroBannerProps) {
   const { openEnquiryModal } = useEnquiry();
 
-  // Combine banner props into an array
+  // Combine banner props into an array (strictly maximum 3 banners)
   const bannerList: HeroBannerType[] =
     banners && banners.length > 0
-      ? banners
+      ? banners.slice(0, 3)
       : banner
       ? [banner]
       : [

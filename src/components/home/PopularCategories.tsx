@@ -22,13 +22,31 @@ export function PopularCategories({ categories = [] }: PopularCategoriesProps) {
     mobileChunks.push(categories.slice(i, i + chunkSize));
   }
 
+  const sectionRef = useRef<HTMLElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const [activeSlide, setActiveSlide] = useState(0);
   const [autoPlay, setAutoPlay] = useState(true);
+  const [isInView, setIsInView] = useState(false);
 
-  // Auto sliding: advances until user touches the screen
+  // Viewport detection: only run mobile animation when section is scrolled into view
   useEffect(() => {
-    if (!autoPlay || mobileChunks.length <= 1) return;
+    const el = sectionRef.current;
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsInView(entry.isIntersecting);
+      },
+      { threshold: 0.15 }
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  // Auto sliding: advances only when section is in view, until user touches the screen
+  useEffect(() => {
+    if (!autoPlay || !isInView || mobileChunks.length <= 1) return;
 
     const interval = setInterval(() => {
       setActiveSlide((prev) => {
@@ -44,7 +62,7 @@ export function PopularCategories({ categories = [] }: PopularCategoriesProps) {
     }, 3800);
 
     return () => clearInterval(interval);
-  }, [autoPlay, mobileChunks.length]);
+  }, [autoPlay, isInView, mobileChunks.length]);
 
   // When user touches the carousel, stop auto-play permanently
   const handleTouchStart = () => {
@@ -74,7 +92,7 @@ export function PopularCategories({ categories = [] }: PopularCategoriesProps) {
   };
 
   return (
-    <section className="py-10 md:py-14 bg-white border-t border-gray-100">
+    <section ref={sectionRef} className="py-10 md:py-14 bg-white border-t border-gray-100">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-6 md:mb-8 gap-3">

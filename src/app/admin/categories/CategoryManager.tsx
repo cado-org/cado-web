@@ -26,7 +26,13 @@ export function CategoryManager({ categories }: CategoryManagerProps) {
     display_order: 0,
   });
 
+  const isLimitReached = categories.length >= 10;
+
   const openCreateModal = () => {
+    if (categories.length >= 10) {
+      alert("Maximum limit of 10 categories reached. Please edit or delete an existing category.");
+      return;
+    }
     setEditingCategory(null);
     setFormData({
       name: "",
@@ -82,16 +88,33 @@ export function CategoryManager({ categories }: CategoryManagerProps) {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-xl font-black text-gray-900">Categories</h2>
+          <div className="flex items-center space-x-2">
+            <h2 className="text-xl font-black text-gray-900">Categories</h2>
+            <span
+              className={`text-[11px] font-bold px-2 py-0.5 rounded-full ${
+                isLimitReached
+                  ? "bg-amber-100 text-amber-800 border border-amber-300"
+                  : "bg-gray-100 text-gray-700 border border-gray-200"
+              }`}
+            >
+              {categories.length} / 10 Categories
+            </span>
+          </div>
           <p className="text-xs text-gray-500 mt-0.5">
-            Manage primary product categories and department groupings.
+            Manage primary product categories (maximum limit of 10 categories, not in subcategories).
           </p>
         </div>
 
         <button
           type="button"
           onClick={openCreateModal}
-          className="inline-flex items-center px-4 py-2.5 bg-[#D71920] hover:bg-[#B5121B] text-white text-xs font-bold uppercase tracking-wider rounded-lg shadow transition space-x-1.5 self-start sm:self-auto cursor-pointer"
+          disabled={isLimitReached}
+          className={`inline-flex items-center px-4 py-2.5 text-white text-xs font-bold uppercase tracking-wider rounded-lg shadow transition space-x-1.5 self-start sm:self-auto cursor-pointer ${
+            isLimitReached
+              ? "bg-gray-400 cursor-not-allowed opacity-60"
+              : "bg-[#D71920] hover:bg-[#B5121B]"
+          }`}
+          title={isLimitReached ? "Maximum limit of 10 categories reached" : "Add Category"}
         >
           <Plus className="w-4 h-4" />
           <span>Add Category</span>
@@ -267,7 +290,12 @@ export function CategoryManager({ categories }: CategoryManagerProps) {
               <ImageUploader
                 label="Category Icon / Image"
                 value={formData.image_url}
-                onChange={(url) => setFormData({ ...formData, image_url: url })}
+                onChange={(url) =>
+                  setFormData((prev) => ({ ...prev, image_url: url }))
+                }
+                onRemove={() =>
+                  setFormData((prev) => ({ ...prev, image_url: "" }))
+                }
                 folder="cado-categories"
               />
 

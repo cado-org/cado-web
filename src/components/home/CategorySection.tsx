@@ -22,13 +22,31 @@ export function CategorySection({ categories = [] }: CategorySectionProps) {
     mobileChunks.push(categories.slice(i, i + chunkSize));
   }
 
+  const sectionRef = useRef<HTMLElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const [activeSlide, setActiveSlide] = useState(0);
   const [autoPlay, setAutoPlay] = useState(true);
+  const [isInView, setIsInView] = useState(false);
 
-  // Auto sliding: advances until the user touches/interacts with the mobile screen
+  // Viewport detection: only run mobile animation when section is scrolled into view
   useEffect(() => {
-    if (!autoPlay || mobileChunks.length <= 1) return;
+    const el = sectionRef.current;
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsInView(entry.isIntersecting);
+      },
+      { threshold: 0.15 }
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  // Auto sliding: advances only when section is in view, until user touches mobile screen
+  useEffect(() => {
+    if (!autoPlay || !isInView || mobileChunks.length <= 1) return;
 
     const interval = setInterval(() => {
       setActiveSlide((prev) => {
@@ -44,7 +62,7 @@ export function CategorySection({ categories = [] }: CategorySectionProps) {
     }, 3500);
 
     return () => clearInterval(interval);
-  }, [autoPlay, mobileChunks.length]);
+  }, [autoPlay, isInView, mobileChunks.length]);
 
   // When user touches the carousel on mobile, stop auto-moving permanently
   const handleTouchStart = () => {
@@ -74,7 +92,7 @@ export function CategorySection({ categories = [] }: CategorySectionProps) {
   };
 
   return (
-    <section className="py-10 md:py-14 bg-white">
+    <section ref={sectionRef} className="py-10 md:py-14 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="flex items-center justify-between mb-6 md:mb-8">

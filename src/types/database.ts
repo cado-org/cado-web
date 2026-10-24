@@ -202,6 +202,37 @@ export interface EnquiryItem {
   created_at: string;
 }
 
+export type PaymentStatus = "pending" | "paid" | "cod" | "failed";
+export type DeliveryStatus = "processing" | "shipped" | "delivered" | "cancelled";
+
+export interface OrderItem {
+  id: string;
+  order_id: string;
+  product_id: string | null;
+  product_name: string;
+  product_sku: string | null;
+  quantity: number;
+  packaging: string | null;
+}
+
+export interface Order {
+  id: string;
+  order_number: string;
+  customer_name: string;
+  customer_phone: string;
+  customer_email: string | null;
+  company_name: string | null;
+  location: string;
+  additional_requirements: string | null;
+  payment_status: PaymentStatus;
+  delivery_status: DeliveryStatus;
+  admin_notes: string | null;
+  created_at: string;
+  updated_at: string;
+  items: OrderItem[];
+  total_quantity: number;
+}
+
 export interface SiteSettings {
   id?: string;
   website_name: string;

@@ -27,7 +27,13 @@ export function BrandManager({ brands }: BrandManagerProps) {
     display_order: 0,
   });
 
+  const isLimitReached = brands.length >= 10;
+
   const openCreateModal = () => {
+    if (brands.length >= 10) {
+      alert("Maximum limit of 10 brands reached. Please edit or delete an existing brand.");
+      return;
+    }
     setEditingBrand(null);
     setFormData({
       name: "",
@@ -85,16 +91,33 @@ export function BrandManager({ brands }: BrandManagerProps) {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-xl font-black text-gray-900">Brands</h2>
+          <div className="flex items-center space-x-2">
+            <h2 className="text-xl font-black text-gray-900">Brands</h2>
+            <span
+              className={`text-[11px] font-bold px-2 py-0.5 rounded-full ${
+                isLimitReached
+                  ? "bg-amber-100 text-amber-800 border border-amber-300"
+                  : "bg-gray-100 text-gray-700 border border-gray-200"
+              }`}
+            >
+              {brands.length} / 10 Brands
+            </span>
+          </div>
           <p className="text-xs text-gray-500 mt-0.5">
-            Manage authorized manufacturer brands and logo assets.
+            Manage authorized manufacturer brands (maximum limit of 10 brands).
           </p>
         </div>
 
         <button
           type="button"
           onClick={openCreateModal}
-          className="inline-flex items-center px-4 py-2.5 bg-[#D71920] hover:bg-[#B5121B] text-white text-xs font-bold uppercase tracking-wider rounded-lg shadow transition space-x-1.5"
+          disabled={isLimitReached}
+          className={`inline-flex items-center px-4 py-2.5 text-white text-xs font-bold uppercase tracking-wider rounded-lg shadow transition space-x-1.5 ${
+            isLimitReached
+              ? "bg-gray-400 cursor-not-allowed opacity-60"
+              : "bg-[#D71920] hover:bg-[#B5121B]"
+          }`}
+          title={isLimitReached ? "Maximum limit of 10 brands reached" : "Add Brand"}
         >
           <Plus className="w-4 h-4" />
           <span>Add Brand</span>
@@ -266,7 +289,12 @@ export function BrandManager({ brands }: BrandManagerProps) {
               <ImageUploader
                 label="Brand Logo"
                 value={formData.logo_url}
-                onChange={(url) => setFormData({ ...formData, logo_url: url })}
+                onChange={(url) =>
+                  setFormData((prev) => ({ ...prev, logo_url: url }))
+                }
+                onRemove={() =>
+                  setFormData((prev) => ({ ...prev, logo_url: "" }))
+                }
                 folder="cado-brands"
               />
 

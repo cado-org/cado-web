@@ -28,6 +28,17 @@ export async function saveProject(formData: any, id?: string) {
       const { error } = await admin.from("projects").update(payload).eq("id", id);
       if (error) throw error;
     } else {
+      // Enforce limit of 10 projects
+      const { count, error: countErr } = await admin
+        .from("projects")
+        .select("*", { count: "exact", head: true });
+      if (!countErr && (count ?? 0) >= 10) {
+        return {
+          error:
+            "Maximum limit of 10 projects reached. Please delete or edit an existing project.",
+        };
+      }
+
       const { error } = await admin.from("projects").insert(payload);
       if (error) throw error;
     }
